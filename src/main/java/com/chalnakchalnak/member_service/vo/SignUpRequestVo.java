@@ -1,16 +1,16 @@
-package com.chalnakchalnak.member_service.adapter.in.web.vo;
+package com.chalnakchalnak.member_service.vo;
 
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class SignUpVo {
+public class SignUpRequestVo {
 
     private String memberUuid;
     private String nickname;
 
     @Builder
-    public SignUpVo(String memberUuid, String nickname) {
+    public SignUpRequestVo(String memberUuid, String nickname) {
         this.memberUuid = memberUuid;
         this.nickname = nickname;
     }

@@ -1,7 +1,5 @@
-package com.chalnakchalnak.member_service.adapter.out.persistence.mysql.entity;
+package com.chalnakchalnak.member_service.entity;
 
-import com.chalnakchalnak.member_service.domain.model.State;
-import com.chalnakchalnak.member_service.common.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -13,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "member")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberEntity extends BaseEntity {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,7 +38,7 @@ public class MemberEntity extends BaseEntity {
     private String profileImageUrl;
 
     @Builder
-    public MemberEntity(Long id,
+    public Member(Long id,
                         String memberUuid,
                         String nickname,
                         String gradeName,

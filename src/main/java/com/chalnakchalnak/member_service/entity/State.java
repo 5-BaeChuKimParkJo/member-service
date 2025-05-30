@@ -1,4 +1,4 @@
-package com.chalnakchalnak.member_service.domain.model;
+package com.chalnakchalnak.member_service.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

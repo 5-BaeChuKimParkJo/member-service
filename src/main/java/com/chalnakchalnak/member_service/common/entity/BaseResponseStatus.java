@@ -35,6 +35,8 @@ public enum BaseResponseStatus {
     // Users
     FAILED_TO_LOGIN(HttpStatus.UNAUTHORIZED, 2102, "아이디 또는 패스워드를 다시 확인하세요."),
 
+    DUPLICATE_NICKNAME(HttpStatus.CONFLICT, 2000, "존재하는 닉네임입니다."),
+
     /**
      * 3000: product service error
      */
