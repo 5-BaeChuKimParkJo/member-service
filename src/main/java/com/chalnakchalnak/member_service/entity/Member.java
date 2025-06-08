@@ -53,4 +53,8 @@ public class Member {
         this.state = state;
         this.profileImageUrl = profileImageUrl;
     }
+
+    public void setProfileImageUrl(String imageUrl) {
+        this.profileImageUrl = imageUrl;
+    }
 }
