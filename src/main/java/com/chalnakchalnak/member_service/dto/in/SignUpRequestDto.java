@@ -3,6 +3,7 @@ package com.chalnakchalnak.member_service.dto.in;
 import com.chalnakchalnak.member_service.entity.Member;
 import com.chalnakchalnak.member_service.entity.State;
 import com.chalnakchalnak.member_service.vo.SignUpRequestVo;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,11 +32,15 @@ public class SignUpRequestDto {
                 .build();
     }
 
-    public Member toEntity() {
+    public Member toEntity(String gradeUuid) {
         return Member.builder()
                 .memberUuid(this.memberUuid)
                 .nickname(this.nickname)
+                .gradeUuid(gradeUuid)
+                .honor(null)
                 .state(State.ACTIVE)
+                .profileImageUrl(null)
+                .point(0L)
                 .build();
     }
 }
