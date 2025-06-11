@@ -24,33 +24,39 @@ public class Member {
     @Column(name = "nickname")
     private String nickname;
 
-    @Column(name = "grade_name")
-    private String gradeName;
+    @Column(name = "grade_uuid")
+    private String gradeUuid;
 
-    @Column(name = "honor_name")
-    private String honorName;
+    @Column(name = "honor")
+    @Enumerated(EnumType.STRING)
+    private Honor honor;
 
-    @Column(name = "state")
+    @Column(name = "state", nullable = false)
     @Enumerated(EnumType.STRING)
     private State state;
 
     @Column(name = "profile_image_url")
     private String profileImageUrl;
 
+    @Column(name = "point", nullable = false, columnDefinition = "0")
+    private Long point;
+
     @Builder
     public Member(Long id,
                         String memberUuid,
                         String nickname,
-                        String gradeName,
-                        String honorName,
+                        String gradeUuid,
+                        Honor honor,
                         State state,
-                        String profileImageUrl) {
+                        String profileImageUrl,
+                        Long point) {
         this.id = id;
         this.memberUuid = memberUuid;
         this.nickname = nickname;
-        this.gradeName = gradeName;
-        this.honorName = honorName;
+        this.gradeUuid = gradeUuid;
+        this.honor = honor;
         this.state = state;
         this.profileImageUrl = profileImageUrl;
+        this.point = point;
     }
 }
