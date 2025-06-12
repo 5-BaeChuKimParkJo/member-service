@@ -2,7 +2,7 @@ package com.chalnakchalnak.member_service.dto.in;
 
 import com.chalnakchalnak.member_service.entity.Member;
 import com.chalnakchalnak.member_service.entity.State;
-import com.chalnakchalnak.member_service.vo.SignUpRequestVo;
+import com.chalnakchalnak.member_service.vo.in.SignUpRequestVo;
 
 import lombok.Builder;
 import lombok.Getter;

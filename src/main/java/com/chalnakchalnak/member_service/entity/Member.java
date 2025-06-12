@@ -38,7 +38,7 @@ public class Member {
     @Column(name = "profile_image_url")
     private String profileImageUrl;
 
-    @Column(name = "point", nullable = false, columnDefinition = "0")
+    @Column(name = "point", nullable = false, columnDefinition = "BIGINT DEFAULT 0")
     private Long point;
 
     @Builder
