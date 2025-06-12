@@ -19,7 +19,9 @@ public class MemberServiceImpl implements MemberService {
         if (existsNickname) {
             throw new BaseException(BaseResponseStatus.DUPLICATE_NICKNAME);
         }
-        memberRepository.save(signUpRequestDto.toEntity());
+
+        String gradeUuid = null;
+        memberRepository.save(signUpRequestDto.toEntity(gradeUuid));
     }
 
     @Override
