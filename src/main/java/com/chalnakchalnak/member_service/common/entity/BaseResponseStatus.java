@@ -9,6 +9,18 @@ import org.springframework.http.HttpStatusCode;
 @AllArgsConstructor
 public enum BaseResponseStatus {
 
+    // 400 Bad Request - 잘못된 파라미터
+    BAD_REQUEST_INVALID_PARAM(HttpStatus.BAD_REQUEST, 400, "잘못된 요청입니다. 파라미터를 확인해주세요."),
+
+    // 404 Not Found - 잘못된 경로 요청
+    NOT_FOUND(HttpStatus.NOT_FOUND, 404, "요청한 리소스를 찾을 수 없습니다."),
+
+    // 405 Method Not Allowed - 허용되지 않은 HTTP 메서드
+    METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, 405, "허용되지 않은 HTTP 메서드입니다."),
+
+    // 500 Internal Server Error - 서버 내부 에러
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 500,"서버 내부 오류가 발생했습니다. 관리자에게 문의해주세요."),
+
     /**
      * 400 : security 에러
      */
@@ -21,7 +33,6 @@ public enum BaseResponseStatus {
     /**
      * 900: 기타 에러
      */
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 900, "Internal server error"),
     SSE_SEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, 901, "알림 전송에 실패하였습니다."),
     INVALID_INPUT(HttpStatus.BAD_REQUEST, 902, "유효하지 입력입니다"),
     FAILED_TO_SAVE(HttpStatus.INTERNAL_SERVER_ERROR, 903, "저장에 실패했습니다."),

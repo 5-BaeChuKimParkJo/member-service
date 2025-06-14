@@ -6,9 +6,12 @@ import io.swagger.v3.oas.annotations.Hidden;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 @Hidden
 @RestControllerAdvice
@@ -72,5 +75,23 @@ public class BaseExceptionHandler {
         // BaseException이 아닌 경우는 일반 INVALID_INPUT으로 처리
         ExceptionResponseEntity<Void> response = new ExceptionResponseEntity<>(BaseResponseStatus.INVALID_INPUT);
         return new ResponseEntity<>(response, response.httpStatus());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ExceptionResponseEntity<Void>> handleAllExceptions(Exception ex) {
+        BaseResponseStatus status;
+
+        if (ex instanceof HttpRequestMethodNotSupportedException) {
+            status = BaseResponseStatus.METHOD_NOT_ALLOWED;
+        } else if (ex instanceof NoHandlerFoundException) {
+            status = BaseResponseStatus.NOT_FOUND;
+        } else if (ex instanceof MethodArgumentTypeMismatchException) {
+            status = BaseResponseStatus.BAD_REQUEST_INVALID_PARAM;
+        } else {
+            ex.printStackTrace(); // 서버 콘솔에 로그 출력
+            status = BaseResponseStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity<>(new ExceptionResponseEntity<>(status), status.getHttpStatusCode());
     }
 }

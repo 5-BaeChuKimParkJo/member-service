@@ -59,4 +59,8 @@ public class Member {
         this.profileImageUrl = profileImageUrl;
         this.point = point;
     }
+
+    public void setProfileImageUrl(String imageUrl) {
+        this.profileImageUrl = imageUrl;
+    }
 }
