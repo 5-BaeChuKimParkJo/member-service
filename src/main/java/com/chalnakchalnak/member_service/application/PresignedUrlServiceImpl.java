@@ -20,6 +20,7 @@ import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignReques
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -37,9 +38,10 @@ public class PresignedUrlServiceImpl implements PresignedUrlService{
 
     @Override
     public PresignedUrlResponseDto generatePresignedUrl(PresignedUrlRequestDto presignedUrlRequestDto) {
+
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(bucket)
-                .key(presignedUrlRequestDto.getFileName())
+                .key(presignedUrlRequestDto.getKey())
                 .contentType(presignedUrlRequestDto.getContentType())
                 .build();
 
@@ -52,7 +54,7 @@ public class PresignedUrlServiceImpl implements PresignedUrlService{
 
         String presignedUrl = presignedRequest.url().toString();
         String uploadFileUrl = "https://" + bucket + ".s3." + region + ".amazonaws.com/"
-                + URLEncoder.encode(presignedUrlRequestDto.getFileName(), StandardCharsets.UTF_8);
+                + URLEncoder.encode(presignedUrlRequestDto.getKey(), StandardCharsets.UTF_8);
 
         return PresignedUrlResponseDto.builder()
                 .presignedUrl(presignedUrl)
