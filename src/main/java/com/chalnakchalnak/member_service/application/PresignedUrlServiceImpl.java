@@ -64,7 +64,7 @@ public class PresignedUrlServiceImpl implements PresignedUrlService{
     @Transactional
     public void saveImageUrl(SaveImageUrlRequestDto saveImageUrlRequestDto) {
         Member member = memberRepository.findByMemberUuid(saveImageUrlRequestDto.getMemberUuid())
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_EXISTS_MEMBER));
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXISTS_MEMBER));
         member.setProfileImageUrl(saveImageUrlRequestDto.getUploadFileUrl());
     }
 }
