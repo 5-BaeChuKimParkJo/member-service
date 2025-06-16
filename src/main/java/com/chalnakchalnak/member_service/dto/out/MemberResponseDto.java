@@ -6,14 +6,16 @@ import com.chalnakchalnak.member_service.entity.State;
 import com.chalnakchalnak.member_service.vo.out.MemberResponseVo;
 import lombok.Builder;
 
-public class MemberResponseDto {
+import java.io.Serializable;
+
+public class MemberResponseDto implements Serializable {
 
     private String memberUuid;
     private String nickname;
     private String gradeUuid;
     private Honor honor;
     private State state;
-    private String profileImageUrl;
+    private String profileImageKey;
     private Long point;
 
     @Builder
@@ -22,14 +24,14 @@ public class MemberResponseDto {
                              String gradeUuid,
                              Honor honor,
                              State state,
-                             String profileImageUrl,
+                             String profileImageKey,
                              Long point) {
         this.memberUuid = memberUuid;
         this.nickname = nickname;
         this.gradeUuid = gradeUuid;
         this.honor = honor;
         this.state = state;
-        this.profileImageUrl = profileImageUrl;
+        this.profileImageKey = profileImageKey;
         this.point = point;
     }
 
@@ -40,7 +42,7 @@ public class MemberResponseDto {
                 .gradeUuid(member.getGradeUuid())
                 .honor(member.getHonor())
                 .state(member.getState())
-                .profileImageUrl(member.getProfileImageUrl())
+                .profileImageKey(member.getProfileImageKey())
                 .point(member.getPoint())
                 .build();
     }
@@ -52,7 +54,7 @@ public class MemberResponseDto {
                 .gradeUuid(gradeUuid)
                 .honor(honor)
                 .state(state)
-                .profileImageUrl(profileImageUrl)
+                .profileImageKey(profileImageKey)
                 .point(point)
                 .build();
     }

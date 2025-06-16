@@ -1,8 +1,10 @@
 package com.chalnakchalnak.member_service.presentation;
 
 import com.chalnakchalnak.member_service.application.MemberService;
+import com.chalnakchalnak.member_service.dto.in.MemberUpdateRequestDto;
 import com.chalnakchalnak.member_service.dto.in.MemberUuidListDto;
 import com.chalnakchalnak.member_service.dto.in.SignUpRequestDto;
+import com.chalnakchalnak.member_service.vo.in.MemberUpdateRequestVo;
 import com.chalnakchalnak.member_service.vo.out.MemberResponseVo;
 import com.chalnakchalnak.member_service.vo.in.MemberUuidListRequestVo;
 import com.chalnakchalnak.member_service.vo.in.SignUpRequestVo;
@@ -36,6 +38,12 @@ public class MemberController {
                 .stream()
                 .map(memberResponseDto -> memberResponseDto.toVo())
                 .toList();
+    }
+
+    @Operation(summary = "회원 데이터 동적 수정")
+    @PostMapping("/update")
+    public void updateDynamic(@RequestBody MemberUpdateRequestVo memberUpdateRequestVo) {
+        memberService.updateDynamic(MemberUpdateRequestDto.from(memberUpdateRequestVo));
     }
 
     @Operation(summary = "회원 가입")

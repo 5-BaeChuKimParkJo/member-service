@@ -1,4 +1,4 @@
-package com.chalnakchalnak.member_service.vo;
+package com.chalnakchalnak.member_service.vo.in;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

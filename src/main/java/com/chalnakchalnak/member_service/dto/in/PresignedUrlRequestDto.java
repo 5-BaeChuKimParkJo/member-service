@@ -1,6 +1,6 @@
 package com.chalnakchalnak.member_service.dto.in;
 
-import com.chalnakchalnak.member_service.vo.PresignedUrlRequestVo;
+import com.chalnakchalnak.member_service.vo.in.PresignedUrlRequestVo;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -18,9 +18,10 @@ public class PresignedUrlRequestDto {
         this.contentType = contentType;
     }
 
-    public static PresignedUrlRequestDto toPresignedUrlRequestDto(PresignedUrlRequestVo presignedUrlRequestVo) {
+    public static PresignedUrlRequestDto toPresignedUrlRequestDto(PresignedUrlRequestVo presignedUrlRequestVo,
+                                                                  String memberUuid) {
         return PresignedUrlRequestDto.builder()
-                .key(UUID.randomUUID().toString())
+                .key("member/" + memberUuid + "/" + "images/" + UUID.randomUUID())
                 .contentType(presignedUrlRequestVo.getContentType())
                 .build();
     }

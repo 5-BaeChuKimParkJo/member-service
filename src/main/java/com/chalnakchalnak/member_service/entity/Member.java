@@ -35,8 +35,8 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private State state;
 
-    @Column(name = "profile_image_url")
-    private String profileImageUrl;
+    @Column(name = "profile_image_key")
+    private String profileImageKey;
 
     @Column(name = "point", nullable = false, columnDefinition = "BIGINT DEFAULT 0")
     private Long point;
@@ -48,7 +48,7 @@ public class Member {
                         String gradeUuid,
                         Honor honor,
                         State state,
-                        String profileImageUrl,
+                        String profileImageKey,
                         Long point) {
         this.id = id;
         this.memberUuid = memberUuid;
@@ -56,11 +56,11 @@ public class Member {
         this.gradeUuid = gradeUuid;
         this.honor = honor;
         this.state = state;
-        this.profileImageUrl = profileImageUrl;
+        this.profileImageKey = profileImageKey;
         this.point = point;
     }
 
-    public void setProfileImageUrl(String imageUrl) {
-        this.profileImageUrl = imageUrl;
+    public void setProfileImageKey(String profileImageKey) {
+        this.profileImageKey = profileImageKey;
     }
 }
