@@ -24,7 +24,7 @@ public class PresignedUrlRequestDto {
                 .substring(presignedUrlRequestVo.getContentType().indexOf("/") + 1);
 
         return PresignedUrlRequestDto.builder()
-                .key("member/" + memberUuid + "/" + "images/" + UUID.randomUUID() + ext)
+                .key("member/" + memberUuid + "/" + "images/" + UUID.randomUUID() + "." + ext)
                 .contentType(presignedUrlRequestVo.getContentType())
                 .build();
     }
