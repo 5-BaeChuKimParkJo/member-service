@@ -6,7 +6,7 @@ import com.chalnakchalnak.member_service.dto.out.PresignedUrlResponseDto;
 
 public interface PresignedUrlService {
 
-    PresignedUrlResponseDto generatePresignedUrl(PresignedUrlRequestDto presignedUrlRequestDto);
+    PresignedUrlResponseDto generatePresignedPost(PresignedUrlRequestDto presignedUrlRequestDto);
 
     void saveImageUrl(SaveImageUrlRequestDto saveImageUrlRequestDto);
 }

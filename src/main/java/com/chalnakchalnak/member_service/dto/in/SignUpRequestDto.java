@@ -39,7 +39,7 @@ public class SignUpRequestDto {
                 .gradeUuid(gradeUuid)
                 .honor(null)
                 .state(State.ACTIVE)
-                .profileImageUrl(null)
+                .profileImageKey(null)
                 .point(0L)
                 .build();
     }
