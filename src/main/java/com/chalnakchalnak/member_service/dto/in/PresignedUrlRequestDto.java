@@ -20,8 +20,11 @@ public class PresignedUrlRequestDto {
 
     public static PresignedUrlRequestDto toPresignedUrlRequestDto(PresignedUrlRequestVo presignedUrlRequestVo,
                                                                   String memberUuid) {
+        String ext = presignedUrlRequestVo.getContentType()
+                .substring(presignedUrlRequestVo.getContentType().indexOf("/") + 1);
+
         return PresignedUrlRequestDto.builder()
-                .key("member/" + memberUuid + "/" + "images/" + UUID.randomUUID())
+                .key("member/" + memberUuid + "/" + "images/" + UUID.randomUUID() + ext)
                 .contentType(presignedUrlRequestVo.getContentType())
                 .build();
     }
