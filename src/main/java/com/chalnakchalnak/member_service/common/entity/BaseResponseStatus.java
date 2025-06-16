@@ -49,6 +49,7 @@ public enum BaseResponseStatus {
     NO_EXISTS_MEMBER(HttpStatus.NOT_FOUND, 2001, "존재하지 않는 회원입니다."),
     DUPLICATE_MEMBER(HttpStatus.CONFLICT, 2002, "이미 존재하는 회원입니다."),
 
+
     /**
      * 3000: product service error
      */
@@ -59,6 +60,7 @@ public enum BaseResponseStatus {
      */
     // S3
     S3_UPLOAD_FAIL(HttpStatus.BAD_REQUEST, 7001, "파일 업로드에 실패하였습니다."),
+    UNABLE_TO_CALCULATE_HMAC(HttpStatus.INTERNAL_SERVER_ERROR, 2003, "HMAC을 계산할 수 없습니다"),
     ;
 
     private final HttpStatusCode httpStatusCode;

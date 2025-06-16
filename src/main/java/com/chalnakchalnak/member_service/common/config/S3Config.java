@@ -1,12 +1,12 @@
 package com.chalnakchalnak.member_service.common.config;
 
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+
 
 @Configuration
 public class S3Config {
@@ -21,12 +21,10 @@ public class S3Config {
     private String region;
 
     @Bean
-    public S3Presigner s3Presigner() {
-        AwsBasicCredentials credentials = AwsBasicCredentials.create(accessKey, secretKey);
-
-        return S3Presigner.builder()
-                .region(Region.of(region))
-                .credentialsProvider(StaticCredentialsProvider.create(credentials))
+    public AmazonS3 amazonS3() {
+        return AmazonS3ClientBuilder.standard()
+                .withRegion(region)
+                .withCredentials(DefaultAWSCredentialsProviderChain.getInstance()) // 환경변수, EC2 Role 등 자동 탐색
                 .build();
     }
 }

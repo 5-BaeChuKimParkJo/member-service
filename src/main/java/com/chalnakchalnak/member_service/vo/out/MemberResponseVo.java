@@ -13,7 +13,7 @@ public class MemberResponseVo {
     private String gradeUuid;
     private Honor honor;
     private State state;
-    private String profileImageUrl;
+    private String profileImageKey;
     private Long point;
 
     @Builder
@@ -22,14 +22,14 @@ public class MemberResponseVo {
                             String gradeUuid,
                             Honor honor,
                             State state,
-                            String profileImageUrl,
+                            String profileImageKey,
                             Long point) {
         this.memberUuid = memberUuid;
         this.nickname = nickname;
         this.gradeUuid = gradeUuid;
         this.honor = honor;
         this.state = state;
-        this.profileImageUrl = profileImageUrl;
+        this.profileImageKey = profileImageKey;
         this.point = point;
     }
 }

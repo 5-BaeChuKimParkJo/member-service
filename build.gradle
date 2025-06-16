@@ -42,14 +42,14 @@ dependencies {
 	annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
 	implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
 
-
 	// S3
-	implementation platform("software.amazon.awssdk:bom:2.25.16") // 최신 BOM 버전 추천
-	implementation 'software.amazon.awssdk:s3'
-	implementation 'software.amazon.awssdk:auth'
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.281'
 
 	// CI
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	// redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
 }
 

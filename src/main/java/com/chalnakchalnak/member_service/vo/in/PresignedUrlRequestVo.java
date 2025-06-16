@@ -1,4 +1,4 @@
-package com.chalnakchalnak.member_service.vo;
+package com.chalnakchalnak.member_service.vo.in;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -8,9 +8,6 @@ import lombok.Getter;
 @Getter
 public class PresignedUrlRequestVo {
 
-    @NotBlank(message = "파일 이름은 필수입니다.")
-    private String fileName;
-
     @NotBlank(message = "파일 형식은 필수입니다.")
     @Pattern(
             regexp = "image/(png|jpeg|webp|bmp)",
@@ -19,8 +16,7 @@ public class PresignedUrlRequestVo {
     private String contentType;
 
     @Builder
-    public PresignedUrlRequestVo(String fileName, String contentType) {
-        this.fileName = fileName;
+    public PresignedUrlRequestVo(String contentType) {
         this.contentType = contentType;
     }
 }
