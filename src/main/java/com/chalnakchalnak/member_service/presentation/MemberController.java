@@ -25,6 +25,12 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    @Operation(summary = "내 정보 조회")
+    @GetMapping
+    public MemberResponseVo getMyMemberData(@RequestHeader("memberUuid") String memberUuid) {
+        return memberService.getMember(memberUuid).toVo();
+    }
+
     @Operation(summary = "회원 단일 조회")
     @GetMapping("/{memberUuid}")
     public MemberResponseVo getMember(@PathVariable String memberUuid) {
