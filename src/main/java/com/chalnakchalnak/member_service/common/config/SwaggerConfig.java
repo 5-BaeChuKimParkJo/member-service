@@ -1,31 +1,43 @@
 package com.chalnakchalnak.member_service.common.config;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import org.springdoc.core.models.GroupedOpenApi;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-
-
-@OpenAPIDefinition(
-    info = @io.swagger.v3.oas.annotations.info.Info(
-                    title = "Member-Service API",
-                    version = "v1",
-                    description = "회원 서비스"
-            ), security = {
-            @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "Bearer Auth")
-    }
-)
 
 @Configuration
 public class SwaggerConfig {
 
+    private static final String BEARER_TOKEN_PREFIX = "Bearer";
+
     @Bean
-    public GroupedOpenApi publicApi() {
-        String[] paths = {"/api/v1/**"};
-        return GroupedOpenApi.builder()
-                .group("public-api")
-                .pathsToMatch(paths)
-                .build();
+    public OpenAPI openAPI() {
+
+        String securityJwtName = "JWT";
+        SecurityRequirement securityRequirement = new SecurityRequirement().addList(securityJwtName);
+        Components components = new Components()
+                .addSecuritySchemes(securityJwtName, new SecurityScheme()
+                        .name(securityJwtName)
+                        .type(SecurityScheme.Type.HTTP)
+                        .scheme(BEARER_TOKEN_PREFIX)
+                        .bearerFormat(securityJwtName));
+
+        return new OpenAPI()
+                .addSecurityItem(securityRequirement)
+                .components(components)
+                .addServersItem(new Server().url("/member-service"))
+                .info(apiInfo());
     }
+
+    private Info apiInfo() {
+        return new Info()
+                .title("MSA - MEMBER SERVICE 문서")
+                .description("MEMBER API 테스트를 위한 Swagger UI")
+                .version("1.0.0");
+    }
+
 }
