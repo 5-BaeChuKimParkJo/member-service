@@ -6,16 +6,11 @@ import com.chalnakchalnak.member_service.entity.State;
 import com.chalnakchalnak.member_service.vo.out.MemberResponseVo;
 import lombok.Builder;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 
-public class MemberResponseDto implements Serializable {
-
-    @Value("${cloud.aws.s3.bucket}")
-    private String bucket;
-
-    @Value("${cloud.aws.region.static}")
-    private String region;
+public class MemberResponseDto {
 
     private String memberUuid;
     private String nickname;
@@ -54,7 +49,7 @@ public class MemberResponseDto implements Serializable {
                 .build();
     }
 
-    public MemberResponseVo toVo() {
+    public MemberResponseVo toVo(String bucket, String region) {
         String imageUrl = profileImageKey != null ?
                             "https://" + bucket + ".s3."
                             + region + ".amazonaws.com/" + profileImageKey : "";

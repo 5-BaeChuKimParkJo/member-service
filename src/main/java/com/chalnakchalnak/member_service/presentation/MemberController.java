@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,18 +24,24 @@ import java.util.List;
 @Slf4j
 public class MemberController {
 
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+
+    @Value("${cloud.aws.region.static}")
+    private String region;
+
     private final MemberService memberService;
 
     @Operation(summary = "내 정보 조회")
     @GetMapping
     public MemberResponseVo getMyMemberData(@RequestHeader("memberUuid") String memberUuid) {
-        return memberService.getMember(memberUuid).toVo();
+        return memberService.getMember(memberUuid).toVo(bucket, region);
     }
 
     @Operation(summary = "회원 단일 조회")
     @GetMapping("/{memberUuid}")
     public MemberResponseVo getMember(@PathVariable String memberUuid) {
-        return memberService.getMember(memberUuid).toVo();
+        return memberService.getMember(memberUuid).toVo(bucket, region);
     }
 
     @Operation(summary = "회원 내역 조회")
@@ -42,7 +49,7 @@ public class MemberController {
     public List<MemberResponseVo> getMemberList(@RequestBody MemberUuidListRequestVo memberUuidListRequestVo) {
         return memberService.getMemberList(MemberUuidListDto.from(memberUuidListRequestVo))
                 .stream()
-                .map(memberResponseDto -> memberResponseDto.toVo())
+                .map(memberResponseDto -> memberResponseDto.toVo(bucket, region))
                 .toList();
     }
 
