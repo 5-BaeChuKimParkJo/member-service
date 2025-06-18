@@ -6,7 +6,6 @@ import lombok.Getter;
 
 @Getter
 public class MemberUpdateRequestVo {
-    private String memberUuid;
     private String nickname;
     private String gradeUuid;
     private Honor honor;

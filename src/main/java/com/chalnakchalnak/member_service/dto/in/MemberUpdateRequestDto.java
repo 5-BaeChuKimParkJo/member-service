@@ -34,9 +34,9 @@ public class MemberUpdateRequestDto {
         this.point = point;
     }
 
-    public static MemberUpdateRequestDto from(MemberUpdateRequestVo memberUpdateRequestVo) {
+    public static MemberUpdateRequestDto from(MemberUpdateRequestVo memberUpdateRequestVo, String memberUuid) {
         return MemberUpdateRequestDto.builder()
-                .memberUuid(memberUpdateRequestVo.getMemberUuid())
+                .memberUuid(memberUuid)
                 .nickname(memberUpdateRequestVo.getNickname())
                 .gradeUuid(memberUpdateRequestVo.getGradeUuid())
                 .honor(memberUpdateRequestVo.getHonor())

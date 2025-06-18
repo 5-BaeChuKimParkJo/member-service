@@ -50,9 +50,8 @@ public class MemberResponseDto {
     }
 
     public MemberResponseVo toVo(String bucket, String region) {
-        String imageUrl = profileImageKey != null ?
-                            "https://" + bucket + ".s3."
-                            + region + ".amazonaws.com/" + profileImageKey : "";
+        String imageUrl = !"".equals(profileImageKey) && profileImageKey != null ?
+                            "https://" + bucket + ".s3." + region + ".amazonaws.com/" + profileImageKey : null;
 
         return MemberResponseVo.builder()
                 .memberUuid(memberUuid)
