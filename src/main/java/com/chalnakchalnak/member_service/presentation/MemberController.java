@@ -55,8 +55,9 @@ public class MemberController {
 
     @Operation(summary = "회원 데이터 동적 수정")
     @PostMapping("/update")
-    public void updateDynamic(@RequestBody MemberUpdateRequestVo memberUpdateRequestVo) {
-        memberService.updateDynamic(MemberUpdateRequestDto.from(memberUpdateRequestVo));
+    public void updateDynamic(@RequestHeader("memberUuid") String memberUuid,
+                              @RequestBody MemberUpdateRequestVo memberUpdateRequestVo) {
+        memberService.updateDynamic(MemberUpdateRequestDto.from(memberUpdateRequestVo, memberUuid));
     }
 
     @Operation(summary = "회원 가입")
