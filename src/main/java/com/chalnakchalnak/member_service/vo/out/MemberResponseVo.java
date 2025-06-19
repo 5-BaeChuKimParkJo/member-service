@@ -15,7 +15,7 @@ public class MemberResponseVo {
     @Schema(description = "회원 닉네임",  nullable = false)
     private String nickname;
 
-    @Schema(description = "회원의 등급uuid",  nullable = false)
+    @Schema(description = "회원 등급uuid",  nullable = false)
     private String gradeUuid;
 
     @Schema(description = "칭호",  nullable = true)
