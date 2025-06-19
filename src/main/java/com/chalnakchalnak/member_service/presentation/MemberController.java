@@ -53,11 +53,26 @@ public class MemberController {
                 .toList();
     }
 
+    @Operation(summary = "회원 전체 조회 - 테스트용")
+    @GetMapping("/all")
+    public List<MemberResponseVo> getAllMember() {
+        return memberService.getAllMemberList()
+                .stream()
+                .map(memberResponseDto -> memberResponseDto.toVo(bucket, region))
+                .toList();
+    }
+
     @Operation(summary = "회원 데이터 동적 수정")
     @PostMapping("/update")
     public void updateDynamic(@RequestHeader("memberUuid") String memberUuid,
                               @RequestBody MemberUpdateRequestVo memberUpdateRequestVo) {
         memberService.updateDynamic(MemberUpdateRequestDto.from(memberUpdateRequestVo, memberUuid));
+    }
+
+    @Operation(summary = "회원 삭제")
+    @DeleteMapping("/{memberUuid}")
+    public void deleteMember(String memberUuid) {
+        memberService.deleteMember(memberUuid);
     }
 
     @Operation(summary = "회원 가입")
