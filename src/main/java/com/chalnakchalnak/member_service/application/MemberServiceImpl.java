@@ -59,7 +59,7 @@ public class MemberServiceImpl implements MemberService {
             throw new BaseException(BaseResponseStatus.DUPLICATE_NICKNAME);
         }
 
-        String gradeUuid = null;
+        String gradeUuid = "grade_tmp_uuid";        // 임시 등급 uuid
         memberRepository.save(signUpRequestDto.toEntity(gradeUuid));
     }
 
