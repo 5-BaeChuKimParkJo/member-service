@@ -53,10 +53,12 @@ public class MemberResponseDto {
         String imageUrl = !"".equals(profileImageKey) && profileImageKey != null ?
                             "https://" + bucket + ".s3." + region + ".amazonaws.com/" + profileImageKey : null;
 
+        String grade_tmp_uuid = "grade_tmp_uuid";
+
         return MemberResponseVo.builder()
                 .memberUuid(memberUuid)
                 .nickname(nickname)
-                .gradeUuid(gradeUuid)
+                .gradeUuid(grade_tmp_uuid)
                 .honor(honor)
                 .state(state)
                 .profileImageUrl(imageUrl)
