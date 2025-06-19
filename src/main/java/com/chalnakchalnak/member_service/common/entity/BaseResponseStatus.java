@@ -48,6 +48,7 @@ public enum BaseResponseStatus {
     DUPLICATE_NICKNAME(HttpStatus.CONFLICT, 2000, "존재하는 닉네임입니다."),
     NO_EXISTS_MEMBER(HttpStatus.NOT_FOUND, 2001, "존재하지 않는 회원입니다."),
     DUPLICATE_MEMBER(HttpStatus.CONFLICT, 2002, "이미 존재하는 회원입니다."),
+    ALREADY_USED_NICKNAME(HttpStatus.CONFLICT, 2003, "현재 사용 중인 닉네임과 동일합니다."),
 
 
     /**

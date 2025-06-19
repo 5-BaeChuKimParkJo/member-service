@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 
-public class MemberResponseDto {
+public class MemberResponseDto implements Serializable {
 
     private String memberUuid;
     private String nickname;

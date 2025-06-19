@@ -13,7 +13,11 @@ public interface MemberService {
 
     List<MemberResponseDto> getMemberList(MemberUuidListDto memberUuidListDto);
 
+    List<MemberResponseDto> getAllMemberList();
+
     void updateDynamic(MemberUpdateRequestDto memberUpdateRequestDto);
+
+    void deleteMember(String memberUuid);
 
     void signUp(SignUpRequestDto signUpRequestDto);
 
