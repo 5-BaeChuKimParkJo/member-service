@@ -26,7 +26,7 @@ public class PresignedUrlController {
 
     @Operation(summary = "AWS S3 Presigned url 요청")
     @PostMapping("/presigned-url")
-    public PresignedUrlResponseVo getPresignedUrl(@RequestHeader("memberUuid") String memberUuid,
+    public PresignedUrlResponseVo getPresignedUrl(@RequestHeader("X-Member-Uuid") String memberUuid,
                                                   @RequestBody @Valid PresignedUrlRequestVo presignedUrlRequestVo) {
 
         return presignedUrlService
@@ -37,7 +37,7 @@ public class PresignedUrlController {
 
     @Operation(summary = "프로필 이미지 key DB저장")
     @PutMapping("/save-url")
-    public void saveImageUrl(@RequestHeader("memberUuid") String memberUuid,
+    public void saveImageUrl(@RequestHeader("X-Member-Uuid") String memberUuid,
                              @RequestBody @Valid SaveImageUrlRequestVo saveImageUrlRequestVo) {
         presignedUrlService.saveImageUrl(SaveImageUrlRequestDto.from(saveImageUrlRequestVo, memberUuid));
     }

@@ -34,7 +34,7 @@ public class MemberController {
 
     @Operation(summary = "내 정보 조회")
     @GetMapping
-    public MemberResponseVo getMyMemberData(@RequestHeader("memberUuid") String memberUuid) {
+    public MemberResponseVo getMyMemberData(@RequestHeader("X-Member-Uuid") String memberUuid) {
         return memberService.getMember(memberUuid).toVo(bucket, region);
     }
 
@@ -64,7 +64,7 @@ public class MemberController {
 
     @Operation(summary = "회원 데이터 동적 수정")
     @PostMapping("/update")
-    public void updateDynamic(@RequestHeader("memberUuid") String memberUuid,
+    public void updateDynamic(@RequestHeader("X-Member-Uuid") String memberUuid,
                               @RequestBody MemberUpdateRequestVo memberUpdateRequestVo) {
         memberService.updateDynamic(MemberUpdateRequestDto.from(memberUpdateRequestVo, memberUuid));
     }
