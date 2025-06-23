@@ -5,6 +5,7 @@ import com.chalnakchalnak.member_service.dto.in.MemberUpdateRequestDto;
 import com.chalnakchalnak.member_service.dto.in.MemberUuidListDto;
 import com.chalnakchalnak.member_service.dto.in.SignUpRequestDto;
 import com.chalnakchalnak.member_service.vo.in.MemberUpdateRequestVo;
+import com.chalnakchalnak.member_service.vo.out.ChatroomMemberResponseVo;
 import com.chalnakchalnak.member_service.vo.out.MemberResponseVo;
 import com.chalnakchalnak.member_service.vo.in.MemberUuidListRequestVo;
 import com.chalnakchalnak.member_service.vo.in.SignUpRequestVo;
@@ -24,24 +25,25 @@ import java.util.List;
 @Slf4j
 public class MemberController {
 
-    @Value("${cloud.aws.s3.bucket}")
-    private String bucket;
-
-    @Value("${cloud.aws.region.static}")
-    private String region;
-
     private final MemberService memberService;
+
+    @Operation(summary = "회원 정보 조회(채팅방)")
+    @GetMapping("/chatroom/{memberUuid}")
+    public ChatroomMemberResponseVo getMemberData(@PathVariable String memberUuid) {
+        return memberService.getChatMember(memberUuid).toVo();
+    }
+
 
     @Operation(summary = "내 정보 조회")
     @GetMapping
     public MemberResponseVo getMyMemberData(@RequestHeader("X-Member-Uuid") String memberUuid) {
-        return memberService.getMember(memberUuid).toVo(bucket, region);
+        return memberService.getMember(memberUuid).toVo();
     }
 
     @Operation(summary = "회원 단일 조회")
     @GetMapping("/{memberUuid}")
     public MemberResponseVo getMember(@PathVariable String memberUuid) {
-        return memberService.getMember(memberUuid).toVo(bucket, region);
+        return memberService.getMember(memberUuid).toVo();
     }
 
     @Operation(summary = "회원 내역 조회")
@@ -49,7 +51,7 @@ public class MemberController {
     public List<MemberResponseVo> getMemberList(@RequestBody MemberUuidListRequestVo memberUuidListRequestVo) {
         return memberService.getMemberList(MemberUuidListDto.from(memberUuidListRequestVo))
                 .stream()
-                .map(memberResponseDto -> memberResponseDto.toVo(bucket, region))
+                .map(memberResponseDto -> memberResponseDto.toVo())
                 .toList();
     }
 
@@ -58,7 +60,7 @@ public class MemberController {
     public List<MemberResponseVo> getAllMember() {
         return memberService.getAllMemberList()
                 .stream()
-                .map(memberResponseDto -> memberResponseDto.toVo(bucket, region))
+                .map(memberResponseDto -> memberResponseDto.toVo())
                 .toList();
     }
 

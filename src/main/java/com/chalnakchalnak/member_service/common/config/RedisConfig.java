@@ -13,7 +13,7 @@ import java.time.Duration;
 @Configuration
 public class RedisConfig {
 
-    private final int minute = 60;
+    private final int minute = 1;
 
     @Bean
     public RedisCacheConfiguration cacheConfiguration() {

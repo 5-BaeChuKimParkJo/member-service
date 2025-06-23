@@ -5,18 +5,21 @@ import com.chalnakchalnak.member_service.common.exception.BaseException;
 import com.chalnakchalnak.member_service.dto.in.MemberUpdateRequestDto;
 import com.chalnakchalnak.member_service.dto.in.MemberUuidListDto;
 import com.chalnakchalnak.member_service.dto.in.SignUpRequestDto;
+import com.chalnakchalnak.member_service.dto.out.ChatroomMemberResponseDto;
 import com.chalnakchalnak.member_service.dto.out.MemberResponseDto;
 import com.chalnakchalnak.member_service.entity.Member;
 import com.chalnakchalnak.member_service.infrastructure.MemberRepository;
 import com.chalnakchalnak.member_service.infrastructure.custom.MemberRepositoryCustom;
 import com.chalnakchalnak.member_service.util.CacheUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -24,33 +27,55 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+
+    @Value("${cloud.aws.region.static}")
+    private String region;
+
     private final MemberRepository memberRepository;
     private final MemberRepositoryCustom memberRepositoryCustom;
     private final RedisTemplate<String, Object> redisTemplate;
     private final CacheUtil cacheUtil;
 
+    @Cacheable(value = "chatMember", key = "#memberUuid")
+    @Override
+    public ChatroomMemberResponseDto getChatMember(String memberUuid) {
+        Member member = memberRepository.findByMemberUuid(memberUuid)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXISTS_MEMBER));
+        return ChatroomMemberResponseDto.from(member, bucket, region);
+    }
+
     @Cacheable(value = "member", key = "#memberUuid")
     @Override
     public MemberResponseDto getMember(String memberUuid) {
-        return MemberResponseDto.from(memberRepository.findByMemberUuid(memberUuid)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXISTS_MEMBER)));
+        Member member = memberRepository.findByMemberUuid(memberUuid)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXISTS_MEMBER));
+        return MemberResponseDto.from(member, bucket, region);
     }
 
     @Cacheable(value = "memberList", key = "#memberUuidListDto.memberUuidList")
     @Override
     public List<MemberResponseDto> getMemberList(MemberUuidListDto memberUuidListDto) {
-        return memberUuidListDto.getMemberUuidList()
+        List<Member> memberList = memberUuidListDto.getMemberUuidList()
                 .stream()
-                .map(memberUuid -> MemberResponseDto.from(memberRepository.findByMemberUuid(memberUuid)
-                        .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXISTS_MEMBER))))
+                .map(memberUuid -> memberRepository.findByMemberUuid(memberUuid)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXISTS_MEMBER)))
                 .toList();
+
+        List<MemberResponseDto> memberResponseDtoList = new ArrayList<>();
+        for (Member member : memberList) {
+            memberResponseDtoList.add(MemberResponseDto.from(member, bucket, region));
+        }
+
+        return memberResponseDtoList;
     }
 
     @Override
     public List<MemberResponseDto> getAllMemberList() {
-        return memberRepository.findAll()
+         return memberRepository.findAll()
                 .stream()
-                .map(MemberResponseDto::from)
+                .map(member -> MemberResponseDto.from(member, bucket, region))
                 .toList();
     }
 
@@ -76,6 +101,7 @@ public class MemberServiceImpl implements MemberService {
         // 관련 캐시 삭제
         cacheUtil.evictMemberCache("member" , memberUpdateRequestDto.getMemberUuid());
         cacheUtil.evictMemberCacheList("memberList" , memberUpdateRequestDto.getMemberUuid());
+        cacheUtil.evictMemberCache("chatMember", memberUpdateRequestDto.getMemberUuid());
     }
 
     @Override
