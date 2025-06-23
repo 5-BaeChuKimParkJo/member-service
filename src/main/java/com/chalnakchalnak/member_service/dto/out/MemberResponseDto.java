@@ -17,7 +17,7 @@ public class MemberResponseDto implements Serializable {
     private String gradeUuid;
     private Honor honor;
     private State state;
-    private String profileImageKey;
+    private String profileImageUrl;
     private Long point;
 
     @Builder
@@ -26,33 +26,34 @@ public class MemberResponseDto implements Serializable {
                              String gradeUuid,
                              Honor honor,
                              State state,
-                             String profileImageKey,
+                             String profileImageUrl,
                              Long point) {
         this.memberUuid = memberUuid;
         this.nickname = nickname;
         this.gradeUuid = gradeUuid;
         this.honor = honor;
         this.state = state;
-        this.profileImageKey = profileImageKey;
+        this.profileImageUrl = profileImageUrl;
         this.point = point;
     }
 
-    public static MemberResponseDto from(Member member) {
+    public static MemberResponseDto from(Member member, String bucket, String region) {
+
+        String imageUrl = !"".equals(member.getProfileImageKey()) && member.getProfileImageKey() != null ?
+                "https://" + bucket + ".s3." + region + ".amazonaws.com/" + member.getProfileImageKey() : null;
+
         return MemberResponseDto.builder()
                 .memberUuid(member.getMemberUuid())
                 .nickname(member.getNickname())
                 .gradeUuid(member.getGradeUuid())
                 .honor(member.getHonor())
                 .state(member.getState())
-                .profileImageKey(member.getProfileImageKey())
+                .profileImageUrl(imageUrl)
                 .point(member.getPoint())
                 .build();
     }
 
-    public MemberResponseVo toVo(String bucket, String region) {
-        String imageUrl = !"".equals(profileImageKey) && profileImageKey != null ?
-                            "https://" + bucket + ".s3." + region + ".amazonaws.com/" + profileImageKey : null;
-
+    public MemberResponseVo toVo() {
         String grade_tmp_uuid = "grade_tmp_uuid";
 
         return MemberResponseVo.builder()
@@ -61,7 +62,7 @@ public class MemberResponseDto implements Serializable {
                 .gradeUuid(grade_tmp_uuid)
                 .honor(honor)
                 .state(state)
-                .profileImageUrl(imageUrl)
+                .profileImageUrl(profileImageUrl)
                 .point(point)
                 .build();
     }
