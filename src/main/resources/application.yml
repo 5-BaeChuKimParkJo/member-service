@@ -33,6 +33,10 @@ cloud:
     s3:
       bucket: ${AWS_S3_BUCKET_NAME}
 
+external:
+  grade-service:
+    url: https://api.cabbage-secondhand.shop/grade-service/api/v1
+
 springdoc:
   api-docs:
     path: /v3/api-docs
