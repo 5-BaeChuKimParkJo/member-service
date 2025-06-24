@@ -37,31 +37,19 @@ public enum BaseResponseStatus {
     INVALID_INPUT(HttpStatus.BAD_REQUEST, 902, "유효하지 입력입니다"),
     FAILED_TO_SAVE(HttpStatus.INTERNAL_SERVER_ERROR, 903, "저장에 실패했습니다."),
 
-    /**
-     * 2000: users service error
-     */
-    // token
-    TOKEN_NOT_VALID(HttpStatus.UNAUTHORIZED, 2001, "토큰이 유효하지 않습니다."),
-
     // Users
-    FAILED_TO_LOGIN(HttpStatus.UNAUTHORIZED, 2102, "아이디 또는 패스워드를 다시 확인하세요."),
-    DUPLICATE_NICKNAME(HttpStatus.CONFLICT, 2000, "존재하는 닉네임입니다."),
-    NO_EXISTS_MEMBER(HttpStatus.NOT_FOUND, 2001, "존재하지 않는 회원입니다."),
-    DUPLICATE_MEMBER(HttpStatus.CONFLICT, 2002, "이미 존재하는 회원입니다."),
-    ALREADY_USED_NICKNAME(HttpStatus.CONFLICT, 2003, "현재 사용 중인 닉네임과 동일합니다."),
+    FAILED_TO_LOGIN(HttpStatus.UNAUTHORIZED, 2000, "아이디 또는 패스워드를 다시 확인하세요."),
+    DUPLICATE_NICKNAME(HttpStatus.CONFLICT, 2001, "존재하는 닉네임입니다."),
+    NO_EXISTS_MEMBER(HttpStatus.NOT_FOUND, 2002, "존재하지 않는 회원입니다."),
+    DUPLICATE_MEMBER(HttpStatus.CONFLICT, 2003, "이미 존재하는 회원입니다."),
+    ALREADY_USED_NICKNAME(HttpStatus.CONFLICT, 2004, "현재 사용 중인 닉네임과 동일합니다."),
 
-
-    /**
-     * 3000: product service error
-     */
-
-
-    /**
-     * 6000: gpt-api error
-     */
     // S3
-    S3_UPLOAD_FAIL(HttpStatus.BAD_REQUEST, 7001, "파일 업로드에 실패하였습니다."),
-    UNABLE_TO_CALCULATE_HMAC(HttpStatus.INTERNAL_SERVER_ERROR, 2003, "HMAC을 계산할 수 없습니다"),
+    S3_UPLOAD_FAIL(HttpStatus.BAD_REQUEST, 2005, "파일 업로드에 실패하였습니다."),
+    UNABLE_TO_CALCULATE_HMAC(HttpStatus.INTERNAL_SERVER_ERROR, 2006, "HMAC을 계산할 수 없습니다"),
+
+
+    GRADE_API_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 2007, "등급 서버에서 데이터 불러오기에 실패했습니다.")
     ;
 
     private final HttpStatusCode httpStatusCode;

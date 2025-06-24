@@ -1,5 +1,6 @@
 package com.chalnakchalnak.member_service.application;
 
+import com.chalnakchalnak.member_service.client.feign.external.grade.GradeApi;
 import com.chalnakchalnak.member_service.common.entity.BaseResponseStatus;
 import com.chalnakchalnak.member_service.common.exception.BaseException;
 import com.chalnakchalnak.member_service.dto.in.MemberUpdateRequestDto;
@@ -13,15 +14,12 @@ import com.chalnakchalnak.member_service.infrastructure.custom.MemberRepositoryC
 import com.chalnakchalnak.member_service.util.CacheUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +33,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final MemberRepositoryCustom memberRepositoryCustom;
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final GradeApi gradeApi;
     private final CacheUtil cacheUtil;
 
     @Cacheable(value = "chatMember", key = "#memberUuid")
@@ -127,8 +125,13 @@ public class MemberServiceImpl implements MemberService {
             throw new BaseException(BaseResponseStatus.DUPLICATE_NICKNAME);
         }
 
-        String gradeUuid = "grade_tmp_uuid";        // 임시 등급 uuid
-        memberRepository.save(signUpRequestDto.toEntity(gradeUuid));
+        String defaultGradeUuid = null;       // 임시 등급 uuid
+//        try {
+//            defaultGradeUuid = gradeApi.getDefaultGradeUuid();
+//        } catch (Exception e) {
+//            throw new BaseException(BaseResponseStatus.GRADE_API_ERROR);
+//        }
+        memberRepository.save(signUpRequestDto.toEntity(defaultGradeUuid));
     }
 
     @Override
