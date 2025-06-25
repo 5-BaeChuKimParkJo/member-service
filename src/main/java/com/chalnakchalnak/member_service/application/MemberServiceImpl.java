@@ -1,6 +1,6 @@
 package com.chalnakchalnak.member_service.application;
 
-import com.chalnakchalnak.member_service.client.feign.external.grade.GradeApi;
+import com.chalnakchalnak.member_service.client.feign.external.grade.GradeServiceFeignClient;
 import com.chalnakchalnak.member_service.common.entity.BaseResponseStatus;
 import com.chalnakchalnak.member_service.common.exception.BaseException;
 import com.chalnakchalnak.member_service.dto.in.MemberUpdateRequestDto;
@@ -33,7 +33,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final MemberRepositoryCustom memberRepositoryCustom;
-    private final GradeApi gradeApi;
+    private final GradeServiceFeignClient gradeServiceFeignClient;
     private final CacheUtil cacheUtil;
 
     @Cacheable(value = "chatMember", key = "#memberUuid")
@@ -125,12 +125,12 @@ public class MemberServiceImpl implements MemberService {
             throw new BaseException(BaseResponseStatus.DUPLICATE_NICKNAME);
         }
 
-        String defaultGradeUuid = null;       // 임시 등급 uuid
-//        try {
-//            defaultGradeUuid = gradeApi.getDefaultGradeUuid();
-//        } catch (Exception e) {
-//            throw new BaseException(BaseResponseStatus.GRADE_API_ERROR);
-//        }
+        String defaultGradeUuid = null;
+        try {
+            defaultGradeUuid = gradeServiceFeignClient.getDefaultGradeUuid();
+        } catch (Exception e) {
+            throw new BaseException(BaseResponseStatus.GRADE_API_ERROR);
+        }
         memberRepository.save(signUpRequestDto.toEntity(defaultGradeUuid));
     }
 
