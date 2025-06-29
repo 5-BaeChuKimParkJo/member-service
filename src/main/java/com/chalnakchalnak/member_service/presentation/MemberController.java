@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -65,7 +64,7 @@ public class MemberController {
     }
 
     @Operation(summary = "회원 데이터 동적 수정")
-    @PostMapping("/update")
+    @PutMapping("/update")
     public void updateDynamic(@RequestHeader("X-Member-Uuid") String memberUuid,
                               @RequestBody MemberUpdateRequestVo memberUpdateRequestVo) {
         memberService.updateDynamic(MemberUpdateRequestDto.from(memberUpdateRequestVo, memberUuid));
