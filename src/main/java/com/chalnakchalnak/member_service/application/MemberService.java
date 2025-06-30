@@ -20,8 +20,6 @@ public interface MemberService {
 
     void updateDynamic(MemberUpdateRequestDto memberUpdateRequestDto);
 
-    void deleteMember(String memberUuid);
-
     void signUp(SignUpRequestDto signUpRequestDto);
 
     Boolean existNickname(String nickname);

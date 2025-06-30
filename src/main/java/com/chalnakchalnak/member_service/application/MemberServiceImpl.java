@@ -103,17 +103,6 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void deleteMember(String memberUuid) {
-        Member member = memberRepository.findByMemberUuid(memberUuid)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXISTS_MEMBER));
-        memberRepository.delete(member);
-
-        // 관련 캐시 삭제
-        cacheUtil.evictMemberCache("member" , memberUuid);
-        cacheUtil.evictMemberCacheList("memberList" , memberUuid);
-    }
-
-    @Override
     @Transactional
     public void signUp(SignUpRequestDto signUpRequestDto) {
         if (memberRepository.findByMemberUuid(signUpRequestDto.getMemberUuid()).isPresent()) {
