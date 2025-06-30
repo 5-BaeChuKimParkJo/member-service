@@ -32,7 +32,6 @@ public class MemberController {
         return memberService.getChatMember(memberUuid).toVo();
     }
 
-
     @Operation(summary = "내 정보 조회")
     @GetMapping
     public MemberResponseVo getMyMemberData(@RequestHeader("X-Member-Uuid") String memberUuid) {
@@ -68,12 +67,6 @@ public class MemberController {
     public void updateDynamic(@RequestHeader("X-Member-Uuid") String memberUuid,
                               @RequestBody MemberUpdateRequestVo memberUpdateRequestVo) {
         memberService.updateDynamic(MemberUpdateRequestDto.from(memberUpdateRequestVo, memberUuid));
-    }
-
-    @Operation(summary = "회원 삭제")
-    @DeleteMapping("/{memberUuid}")
-    public void deleteMember(String memberUuid) {
-        memberService.deleteMember(memberUuid);
     }
 
     @Operation(summary = "회원 가입")
