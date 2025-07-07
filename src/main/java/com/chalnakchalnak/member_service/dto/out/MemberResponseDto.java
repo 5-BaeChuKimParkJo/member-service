@@ -54,12 +54,10 @@ public class MemberResponseDto implements Serializable {
     }
 
     public MemberResponseVo toVo() {
-        String grade_tmp_uuid = "grade_tmp_uuid";
-
         return MemberResponseVo.builder()
                 .memberUuid(memberUuid)
                 .nickname(nickname)
-                .gradeUuid(grade_tmp_uuid)
+                .gradeUuid(gradeUuid)
                 .honor(honor)
                 .state(state)
                 .profileImageUrl(profileImageUrl)
