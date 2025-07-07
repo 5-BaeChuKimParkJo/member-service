@@ -51,6 +51,7 @@ public enum BaseResponseStatus {
 
     GRADE_API_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 2007, "등급 서버에서 데이터 불러오기에 실패했습니다."),
     FAILED_TO_READ_GRADE_EVENT(HttpStatus.INTERNAL_SERVER_ERROR, 2008, "등급 서비스의 이벤트 읽기에 실패했습니다."),
+    FAILED_SEND_MESSAGE_TO_DLQ(HttpStatus.INTERNAL_SERVER_ERROR, 2009, "메세지를 DLQ로 보내는데 실패했습니다"),
     ;
 
     private final HttpStatusCode httpStatusCode;
