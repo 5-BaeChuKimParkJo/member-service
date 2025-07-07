@@ -21,26 +21,22 @@ public class GradeEventConsumer {
     private final ObjectMapper objectMapper;
 
     @KafkaListener(
-            topics = "grade-topic",
+            topics = "grade-service.grade-update",
             groupId = "grade-group-1"
     )
     public void consume(ConsumerRecord<String, String> record) {
         log.info("Received message: {}", record.value());
 
-        try {
-            // 예시: JSON 파싱 → DTO → 서비스 처리
-            GradeEventRequestDto event = parseEvent(record.value());
+        // 예시: JSON 파싱 → DTO → 서비스 처리
+        GradeEventRequestDto event = parseEvent(record.value());
 
-            MemberUpdateRequestDto memberUpdateRequestDto = MemberUpdateRequestDto.builder()
-                    .memberUuid(event.getMemberUuid())
-                    .point(event.getPoint())
-                    .gradeUuid(event.getGradeUuid())
-                    .build();
+        MemberUpdateRequestDto memberUpdateRequestDto = MemberUpdateRequestDto.builder()
+                .memberUuid(event.getMemberUuid())
+                .point(event.getPoint())
+                .gradeUuid(event.getGradeUuid())
+                .build();
 
-            memberService.updateDynamic(memberUpdateRequestDto);
-        } catch (Exception e) {
-            log.error("Failed to process grade event: {}", record.value(), e);
-        }
+        memberService.updateDynamic(memberUpdateRequestDto);
     }
 
     private GradeEventRequestDto parseEvent(String json) {
