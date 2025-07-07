@@ -49,7 +49,8 @@ public enum BaseResponseStatus {
     UNABLE_TO_CALCULATE_HMAC(HttpStatus.INTERNAL_SERVER_ERROR, 2006, "HMAC을 계산할 수 없습니다"),
 
 
-    GRADE_API_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 2007, "등급 서버에서 데이터 불러오기에 실패했습니다.")
+    GRADE_API_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 2007, "등급 서버에서 데이터 불러오기에 실패했습니다."),
+    FAILED_TO_READ_GRADE_EVENT(HttpStatus.INTERNAL_SERVER_ERROR, 2008, "등급 서비스의 이벤트 읽기에 실패했습니다."),
     ;
 
     private final HttpStatusCode httpStatusCode;
