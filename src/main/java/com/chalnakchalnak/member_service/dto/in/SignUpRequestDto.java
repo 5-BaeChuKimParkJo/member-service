@@ -12,11 +12,11 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @ToString
-@Builder(toBuilder = true)
 public class SignUpRequestDto {
 
     private String memberUuid;
     private String nickname;
+    private String defaultProfileImageKey = "member/temp_member_uuid/images/91a21dc1-0b39-4238-9a4f-5e18de8f48bd.png";
 
     @Builder
     public SignUpRequestDto(String memberUuid,
@@ -41,6 +41,7 @@ public class SignUpRequestDto {
                 .state(State.ACTIVE)
                 .profileImageKey(null)
                 .point(100.0)
+                .profileImageKey(defaultProfileImageKey)
                 .build();
     }
 }
