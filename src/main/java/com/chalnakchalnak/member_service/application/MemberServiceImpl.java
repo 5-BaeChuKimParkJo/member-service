@@ -114,12 +114,13 @@ public class MemberServiceImpl implements MemberService {
             throw new BaseException(BaseResponseStatus.DUPLICATE_NICKNAME);
         }
 
-        String defaultGradeUuid = "b7349693-1930-4a3e-bdc6-f65c8fdc22f2";
-//        try {
-//            defaultGradeUuid = gradeServiceFeignClient.getDefaultGradeUuid();
-//        } catch (Exception e) {
-//            throw new BaseException(BaseResponseStatus.GRADE_API_ERROR);
-//        }
+//        String defaultGradeUuid = "b7349693-1930-4a3e-bdc6-f65c8fdc22f2";
+        String defaultGradeUuid = "";
+        try {
+            defaultGradeUuid = gradeServiceFeignClient.getDefaultGradeUuid();
+        } catch (Exception e) {
+            throw new BaseException(BaseResponseStatus.GRADE_API_ERROR);
+        }
         memberRepository.save(signUpRequestDto.toEntity(defaultGradeUuid));
     }
 
