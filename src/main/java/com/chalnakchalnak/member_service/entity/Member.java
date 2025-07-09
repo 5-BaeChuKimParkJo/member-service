@@ -40,7 +40,7 @@ public class Member extends BaseEntity {
     private String profileImageKey;
 
     @Column(name = "point", nullable = false, columnDefinition = "BIGINT DEFAULT 0")
-    private Long point;
+    private Double point;
 
     @Builder
     public Member(Long id,
@@ -50,7 +50,7 @@ public class Member extends BaseEntity {
                         Honor honor,
                         State state,
                         String profileImageKey,
-                        Long point) {
+                        Double point) {
         this.id = id;
         this.memberUuid = memberUuid;
         this.nickname = nickname;

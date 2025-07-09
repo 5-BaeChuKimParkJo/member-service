@@ -28,7 +28,7 @@ public class MemberResponseVo {
     private String profileImageUrl;
 
     @Schema(description = "포인트",  nullable = true)
-    private Long point;
+    private Double point;
 
     @Builder
     public MemberResponseVo(String memberUuid,
@@ -37,7 +37,7 @@ public class MemberResponseVo {
                             Honor honor,
                             State state,
                             String profileImageUrl,
-                            Long point) {
+                            Double point) {
         this.memberUuid = memberUuid;
         this.nickname = nickname;
         this.gradeUuid = gradeUuid;

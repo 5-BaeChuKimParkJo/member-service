@@ -15,7 +15,7 @@ public class MemberUpdateRequestDto {
     private Honor honor;
     private State state;
     private String profileImageKey;
-    private Long point;
+    private Double point;
 
     @Builder
     public MemberUpdateRequestDto(String memberUuid,
@@ -24,7 +24,7 @@ public class MemberUpdateRequestDto {
                                   Honor honor,
                                   State state,
                                   String profileImageKey,
-                                  Long point) {
+                                  Double point) {
         this.memberUuid = memberUuid;
         this.nickname = nickname;
         this.gradeUuid = gradeUuid;
