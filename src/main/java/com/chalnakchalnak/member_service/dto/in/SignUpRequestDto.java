@@ -40,7 +40,7 @@ public class SignUpRequestDto {
                 .honor(null)
                 .state(State.ACTIVE)
                 .profileImageKey(defaultProfileImageKey)
-                .point(0L)
+                .point(100.0)
                 .build();
     }
 }

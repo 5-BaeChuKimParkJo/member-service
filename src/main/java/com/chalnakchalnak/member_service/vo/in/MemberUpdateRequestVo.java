@@ -11,5 +11,5 @@ public class MemberUpdateRequestVo {
     private Honor honor;
     private State state;
     private String profileImageKey;
-    private Long point;
+    private Double point;
 }

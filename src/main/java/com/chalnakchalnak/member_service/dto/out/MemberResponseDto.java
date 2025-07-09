@@ -18,7 +18,7 @@ public class MemberResponseDto implements Serializable {
     private Honor honor;
     private State state;
     private String profileImageUrl;
-    private Long point;
+    private Double point;
 
     @Builder
     public MemberResponseDto(String memberUuid,
@@ -27,7 +27,7 @@ public class MemberResponseDto implements Serializable {
                              Honor honor,
                              State state,
                              String profileImageUrl,
-                             Long point) {
+                             Double point) {
         this.memberUuid = memberUuid;
         this.nickname = nickname;
         this.gradeUuid = gradeUuid;
