@@ -2,7 +2,9 @@ package com.chalnakchalnak.member_service.dto.in;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 public class GradeEventRequestDto {
 

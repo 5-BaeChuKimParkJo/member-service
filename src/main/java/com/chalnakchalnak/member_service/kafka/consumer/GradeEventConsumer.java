@@ -5,12 +5,15 @@ import com.chalnakchalnak.member_service.common.entity.BaseResponseStatus;
 import com.chalnakchalnak.member_service.common.exception.BaseException;
 import com.chalnakchalnak.member_service.dto.in.GradeEventRequestDto;
 import com.chalnakchalnak.member_service.dto.in.MemberUpdateRequestDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,22 +24,26 @@ public class GradeEventConsumer {
     private final ObjectMapper objectMapper;
 
     @KafkaListener(
-            topics = "grade-service.grade-update",
+            topics = "grade-service.grade-history",
             groupId = "grade-group-1"
     )
-    public void consume(ConsumerRecord<String, String> record) {
-        log.info("Received message: {}", record.value());
+    public void consume(List<String> messages) throws JsonProcessingException {
 
-        // 예시: JSON 파싱 → DTO → 서비스 처리
-        GradeEventRequestDto event = parseEvent(record.value());
+        for(String message : messages) {
 
-        MemberUpdateRequestDto memberUpdateRequestDto = MemberUpdateRequestDto.builder()
-                .memberUuid(event.getMemberUuid())
-                .point(event.getPoint())
-                .gradeUuid(event.getGradeUuid())
-                .build();
+            GradeEventRequestDto gradeEventRequestDto
+                    = objectMapper.readValue(message, GradeEventRequestDto.class);
 
-        memberService.updateDynamic(memberUpdateRequestDto);
+            log.error("gradeEventRequestDto {}", gradeEventRequestDto.toString());
+
+            MemberUpdateRequestDto memberUpdateRequestDto = MemberUpdateRequestDto.builder()
+                    .memberUuid(gradeEventRequestDto.getMemberUuid())
+                    .point(gradeEventRequestDto.getPoint())
+                    .gradeUuid(gradeEventRequestDto.getGradeUuid())
+                    .build();
+
+            memberService.updateDynamic(memberUpdateRequestDto);
+        }
     }
 
     private GradeEventRequestDto parseEvent(String json) {
