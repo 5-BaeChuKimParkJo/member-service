@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,6 +23,9 @@ public class GradeEventConsumer {
 
     private final MemberService memberService;
     private final ObjectMapper objectMapper;
+    private final KafkaTemplate<String, String> kafkaTemplate;
+
+    private static final String DLQ_TOPIC = "member-service.grade-topic-dlq";
 
     @KafkaListener(
             topics = "grade-service.grade-history",
@@ -31,18 +35,22 @@ public class GradeEventConsumer {
 
         for(String message : messages) {
 
-            GradeEventRequestDto gradeEventRequestDto
-                    = objectMapper.readValue(message, GradeEventRequestDto.class);
+            try {
+                GradeEventRequestDto gradeEventRequestDto
+                        = objectMapper.readValue(message, GradeEventRequestDto.class);
 
-            log.error("gradeEventRequestDto {}", gradeEventRequestDto.toString());
+                log.error("gradeEventRequestDto {}", gradeEventRequestDto.toString());
 
-            MemberUpdateRequestDto memberUpdateRequestDto = MemberUpdateRequestDto.builder()
-                    .memberUuid(gradeEventRequestDto.getMemberUuid())
-                    .point(gradeEventRequestDto.getPoint())
-                    .gradeUuid(gradeEventRequestDto.getGradeUuid())
-                    .build();
+                MemberUpdateRequestDto memberUpdateRequestDto = MemberUpdateRequestDto.builder()
+                        .memberUuid(gradeEventRequestDto.getMemberUuid())
+                        .point(gradeEventRequestDto.getPoint())
+                        .gradeUuid(gradeEventRequestDto.getGradeUuid())
+                        .build();
 
-            memberService.updateDynamic(memberUpdateRequestDto);
+                memberService.updateDynamic(memberUpdateRequestDto);
+            }catch (Exception e) {
+                kafkaTemplate.send(DLQ_TOPIC, message);
+            }
         }
     }
 
