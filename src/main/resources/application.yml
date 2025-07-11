@@ -9,6 +9,7 @@ spring:
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -16,12 +17,41 @@ spring:
     properties:
       hibernate:
         format_sql: true
-  data:
-    redis:
-      host: ${REDIS_HOST}
-      port: ${REDIS_PORT}
-      password: ${REDIS_PASSWORD}
 
+  cloud:
+    aws:
+      credentials:
+        access-key: ${AWS_ACCESS_KEY_ID}
+        secret-key: ${AWS_SECRET_ACCESS_KEY}
+      region:
+        static: ${AWS_REGION}
+      s3:
+        bucket: ${AWS_S3_BUCKET_NAME}
+
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVERS}
+    producer:
+      key-deserializer: org.apache.kafka.common.serialization.StringSerializer
+      value-deserializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: ${KAFKA_ACKS}
+      retries: ${KAFKA_RETRIES}
+      batch-size: 640000
+      linger-ms: 5
+      buffer-memory: 67108864
+      properties:
+        request.timeout.ms: ${KAFKA_REQUEST_TIMEOUT_MS}
+        delivery.timeout.ms: ${KAFKA_DELIVERY_TIMEOUT_MS}
+        max.block.ms: ${KAFKA_MAX_BLOCK_MS}
+    consumer:
+      group-id: ${KAFKA_CONSUMER_GROUP_ID}
+      auto-offset-reset: latest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      max-poll-records: 5000
+    listener:
+      ack-mode: manual_immediate
+      type: batch
 
 cloud:
   aws:
@@ -32,10 +62,6 @@ cloud:
       static: ${AWS_REGION}
     s3:
       bucket: ${AWS_S3_BUCKET_NAME}
-
-external:
-  grade-service:
-    url: https://api.cabbage-secondhand.shop/grade-service/api/v1
 
 springdoc:
   api-docs:
