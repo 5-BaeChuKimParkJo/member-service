@@ -29,7 +29,7 @@ public class GradeEventConsumer {
 
     @KafkaListener(
             topics = "grade-service.grade-history",
-            groupId = "grade-group-1"
+            groupId = "grade-service-consumer-dev"
     )
     public void consume(List<String> messages) throws JsonProcessingException {
 
