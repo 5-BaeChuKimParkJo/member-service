@@ -80,11 +80,6 @@ JWT:
     access-expire-time: ${ACCESS_TOKEN_EXPIRE_TIME}
     refresh-expire-time: ${REFRESH_TOKEN_EXPIRE_TIME}
 
-feign:
-  client:
-    member-service:
-      url: ${MEMBER_SERVICE_URL}
-
 springdoc:
   api-docs:
     path: /v3/api-docs

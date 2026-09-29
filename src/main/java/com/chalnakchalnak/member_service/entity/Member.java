@@ -22,7 +22,7 @@ public class Member extends BaseEntity {
     @Column(name = "member_uuid", unique = true, nullable = false, length = 50)
     private String memberUuid;
 
-    @Column(name = "nickname")
+    @Column(name = "nickname", unique = true, nullable = false)
     private String nickname;
 
     @Column(name = "grade_uuid")

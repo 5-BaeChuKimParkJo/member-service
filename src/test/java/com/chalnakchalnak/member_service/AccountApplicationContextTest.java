@@ -31,7 +31,6 @@ import static org.assertj.core.api.Assertions.assertThat;
         "JWT.secret-key=0123456789012345678901234567890123456789012345678901234567890123",
         "JWT.token.access-expire-time=600000",
         "JWT.token.refresh-expire-time=1200000",
-        "feign.client.member-service.url=http://localhost",
         "cloud.aws.credentials.access-key=test",
         "cloud.aws.credentials.secret-key=test",
         "cloud.aws.region.static=ap-northeast-2",

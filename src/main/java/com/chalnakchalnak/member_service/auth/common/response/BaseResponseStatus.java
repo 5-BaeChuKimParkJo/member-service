@@ -46,6 +46,7 @@ public enum BaseResponseStatus {
      */
     MEMBER_SERVICE_CREATE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 4300, "member-service 회원 생성 요청에 실패하였습니다."),
     MEMBER_SERVICE_EXISTS_NICKNAME_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 4301, "member-service 닉네임 중복 확인 요청에 실패하였습니다."),
+    DEFAULT_GRADE_NOT_CONFIGURED(HttpStatus.INTERNAL_SERVER_ERROR, 4302, "기본 등급이 설정되지 않았습니다."),
 
     /**
      * 4900~4999 : 기타 에러

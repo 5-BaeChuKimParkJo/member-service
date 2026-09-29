@@ -1,13 +1,14 @@
 package com.chalnakchalnak.member_service.auth.application.service;
 
-import com.chalnakchalnak.member_service.auth.application.mapper.feign.MemberMapper;
+import com.chalnakchalnak.member_service.account.AccountRegistrationService;
+import com.chalnakchalnak.member_service.account.MemberProfilePort;
+import com.chalnakchalnak.member_service.account.RegisterAccountCommand;
 import com.chalnakchalnak.member_service.auth.application.port.dto.SignOutDto;
 import com.chalnakchalnak.member_service.auth.application.port.dto.in.*;
 import com.chalnakchalnak.member_service.auth.application.port.dto.out.AuthResponseDto;
 import com.chalnakchalnak.member_service.auth.application.port.dto.out.GetMemberIdResponseDto;
 import com.chalnakchalnak.member_service.auth.application.port.dto.out.SignInResponseDto;
 import com.chalnakchalnak.member_service.auth.application.port.out.*;
-import com.chalnakchalnak.member_service.auth.application.port.out.feign.member.MemberServicePort;
 import com.chalnakchalnak.member_service.auth.domain.model.enums.IdentityVerificationPurpose;
 import com.chalnakchalnak.member_service.auth.application.mapper.AuthMapper;
 import com.chalnakchalnak.member_service.auth.application.port.in.AuthUseCase;
@@ -24,15 +25,13 @@ public class AuthService implements AuthUseCase {
 
     private final AuthRepositoryPort authRepositoryPort;
     private final AuthSecurityPort authSecurityPort;
-    private final GenerateUuidPort generateUuidPort;
     private final VerificationCodeStorePort verificationCodeStorePort;
     private final TokenStorePort tokenStorePort;
-    private final MemberServicePort memberServicePort;
+    private final AccountRegistrationService accountRegistrationService;
+    private final MemberProfilePort memberProfilePort;
     private final AuthMapper authMapper;
-    private final MemberMapper memberMapper;
 
     @Override
-    @Transactional
     public void signUp(SignUpRequestDto signUpRequestDto) {
 
         if (!verificationCodeStorePort.grantedAccess(
@@ -41,24 +40,12 @@ public class AuthService implements AuthUseCase {
             throw new BaseException(BaseResponseStatus.SIGN_UP_NOT_VERIFIED);
         }
 
-        if(authRepositoryPort.existsByMemberId(signUpRequestDto.getMemberId())) {
-            throw new BaseException(BaseResponseStatus.DUPLICATED_MEMBER_ID);
-        } else if (memberServicePort.existsByNickname(signUpRequestDto.getNickname())) {
-            throw new BaseException(BaseResponseStatus.DUPLICATED_NICKNAME);
-        } else if (authRepositoryPort.existsByPhoneNumber(signUpRequestDto.getPhoneNumber())) {
-            throw new BaseException(BaseResponseStatus.DUPLICATED_PHONE_NUMBER);
-        }
-
-        AuthDomain authDomain = authMapper.toAuthDomain(
-                signUpRequestDto,
-                generateUuidPort.generateUuid(),
-                authSecurityPort.encryptPassword(signUpRequestDto.getPassword())
-        );
-
-        authRepositoryPort.save(authMapper.toSignUpDto(authDomain));
-
-        // member-service로 member 생성 요청 (feign client)
-        memberServicePort.createMember(memberMapper.toCreateMemberRequestDto(authDomain));
+        accountRegistrationService.register(new RegisterAccountCommand(
+                signUpRequestDto.getMemberId(),
+                signUpRequestDto.getPassword(),
+                signUpRequestDto.getNickname(),
+                signUpRequestDto.getPhoneNumber()
+        ));
     }
 
     @Override
@@ -68,7 +55,7 @@ public class AuthService implements AuthUseCase {
 
     @Override
     public Boolean existsNickname(ExistsNicknameRequestDto existsNicknameRequestDto) {
-        return memberServicePort.existsByNickname(existsNicknameRequestDto.getNickname());
+        return memberProfilePort.existsByNickname(existsNicknameRequestDto.getNickname());
     }
 
     @Override

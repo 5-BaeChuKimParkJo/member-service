@@ -3,7 +3,6 @@ package com.chalnakchalnak.member_service;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.kafka.annotation.EnableKafka;
 
@@ -11,10 +10,6 @@ import org.springframework.kafka.annotation.EnableKafka;
 @EnableKafka
 @EnableCaching
 @EnableJpaAuditing
-@EnableFeignClients(basePackages = {
-		"com.chalnakchalnak.member_service.client.feign.external",
-		"com.chalnakchalnak.member_service.auth.adapter.out.http.feign"
-})
 public class MemberServiceApplication {
 
 	public static void main(String[] args) {
