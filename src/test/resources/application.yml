@@ -1,0 +1,54 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:account;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    username: sa
+    password: ""
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: ""
+  kafka:
+    bootstrap-servers: localhost:9092
+    listener:
+      auto-startup: false
+    producer:
+      acks: 1
+      retries: 0
+      properties:
+        request.timeout.ms: 1000
+        delivery.timeout.ms: 1000
+        max.block.ms: 1000
+    consumer:
+      group-id: account-test
+
+cloud:
+  aws:
+    credentials:
+      access-key: test
+      secret-key: test
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: test-bucket
+
+coolsms:
+  api-key: test
+  secret-key: test
+  sender-phone-number: "01000000000"
+  domain: https://api.coolsms.co.kr
+
+JWT:
+  secret-key: 0123456789012345678901234567890123456789012345678901234567890123
+  token:
+    access-expire-time: 600000
+    refresh-expire-time: 1200000
+
+feign:
+  client:
+    member-service:
+      url: http://localhost

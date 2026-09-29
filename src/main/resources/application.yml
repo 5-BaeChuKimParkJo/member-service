@@ -3,12 +3,12 @@ server:
 
 spring:
   application:
-    name: member-service
+    name: account-service
   datasource:
-    url: ${MYSQL_URL}
-    username: ${MYSQL_USERNAME}
-    password: ${MYSQL_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${POSTGRES_URL}
+    username: ${POSTGRES_USERNAME}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
@@ -67,6 +67,23 @@ cloud:
       static: ${AWS_REGION}
     s3:
       bucket: ${AWS_S3_BUCKET_NAME}
+
+coolsms:
+  api-key: ${COOLSMS_API_KEY}
+  secret-key: ${COOLSMS_API_SECRET}
+  sender-phone-number: ${COOLSMS_PHONE_NUMBER}
+  domain: https://api.coolsms.co.kr
+
+JWT:
+  secret-key: ${JWT_SECRET}
+  token:
+    access-expire-time: ${ACCESS_TOKEN_EXPIRE_TIME}
+    refresh-expire-time: ${REFRESH_TOKEN_EXPIRE_TIME}
+
+feign:
+  client:
+    member-service:
+      url: ${MEMBER_SERVICE_URL}
 
 springdoc:
   api-docs:
