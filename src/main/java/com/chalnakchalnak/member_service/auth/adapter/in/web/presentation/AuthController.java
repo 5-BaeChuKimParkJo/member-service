@@ -15,7 +15,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping({
+        "/api/v1/auth",
+        "/auth-service/api/v1/auth",
+        "/account-service/api/v1/auth"
+})
 @RequiredArgsConstructor
 public class AuthController {
 

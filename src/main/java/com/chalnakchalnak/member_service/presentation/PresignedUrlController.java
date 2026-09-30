@@ -19,7 +19,11 @@ import java.util.Date;
 @Tag(name = "ProfileImage", description = "프로필 이미지 관련 API")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/member")
+@RequestMapping({
+        "/api/v1/member",
+        "/member-service/api/v1/member",
+        "/account-service/api/v1/member"
+})
 public class PresignedUrlController {
 
     private final PresignedUrlService presignedUrlService;

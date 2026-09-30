@@ -18,7 +18,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Tag(name = "Member", description = "회원 관련 API")
-@RequestMapping("/api/v1/member")
+@RequestMapping({
+        "/api/v1/member",
+        "/member-service/api/v1/member",
+        "/account-service/api/v1/member"
+})
 @RestController
 @RequiredArgsConstructor
 @Slf4j

@@ -13,7 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/identity-verification")
+@RequestMapping({
+        "/api/v1/identity-verification",
+        "/auth-service/api/v1/identity-verification",
+        "/account-service/api/v1/identity-verification"
+})
 @RequiredArgsConstructor
 public class IdentityVerificationController {
 
