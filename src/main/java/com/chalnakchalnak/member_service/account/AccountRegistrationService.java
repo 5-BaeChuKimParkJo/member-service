@@ -9,7 +9,8 @@ import com.chalnakchalnak.member_service.auth.common.exception.BaseException;
 import com.chalnakchalnak.member_service.auth.common.response.BaseResponseStatus;
 import com.chalnakchalnak.member_service.auth.domain.model.AuthDomain;
 import com.chalnakchalnak.member_service.grade.Grade;
-import com.chalnakchalnak.member_service.grade.GradeRepository;
+import com.chalnakchalnak.member_service.grade.GradePolicy;
+import com.chalnakchalnak.member_service.grade.GradePolicyConfigurationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +26,7 @@ public class AccountRegistrationService {
     private final AuthSecurityPort authSecurity;
     private final GenerateUuidPort uuidGenerator;
     private final MemberProfilePort memberProfiles;
-    private final GradeRepository grades;
+    private final GradePolicy gradePolicy;
     private final AuthMapper authMapper;
 
     @Transactional
@@ -51,8 +52,17 @@ public class AccountRegistrationService {
                 memberUuid,
                 authSecurity.encryptPassword(command.password())
         );
-        Grade defaultGrade = grades.findByOrderNumber(DEFAULT_GRADE_ORDER)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.DEFAULT_GRADE_NOT_CONFIGURED));
+        Grade defaultGrade;
+        try {
+            defaultGrade = gradePolicy.gradeFor(INITIAL_POINTS);
+            if (defaultGrade.getOrderNumber() != DEFAULT_GRADE_ORDER) {
+                throw new GradePolicyConfigurationException(
+                        "Initial points must resolve to grade order " + DEFAULT_GRADE_ORDER
+                );
+            }
+        } catch (GradePolicyConfigurationException exception) {
+            throw new BaseException(BaseResponseStatus.DEFAULT_GRADE_NOT_CONFIGURED);
+        }
 
         authRepository.save(authMapper.toSignUpDto(auth));
         memberProfiles.createProfile(

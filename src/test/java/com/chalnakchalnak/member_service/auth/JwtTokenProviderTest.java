@@ -19,7 +19,7 @@ class JwtTokenProviderTest {
                 .withProperty("JWT.secret-key",
                         "0123456789012345678901234567890123456789012345678901234567890123")
                 .withProperty("JWT.token.access-expire-time", "600000")
-                .withProperty("JWT.token.refresh-expire-time", "1200");
+                .withProperty("JWT.token.refresh-expire-time", "1209600000");
         provider = new JwtTokenProvider(environment);
     }
 
@@ -48,5 +48,15 @@ class JwtTokenProviderTest {
         assertThatThrownBy(() -> provider.extractAccessMemberUuid(refresh))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("access");
+    }
+
+    @Test
+    void treatsRefreshExpirationConfigurationAsMilliseconds() {
+        String refresh = provider.generateRefreshToken("member", "member-uuid");
+        Claims claims = provider.extractClaim(refresh, value -> value);
+
+        long lifetimeMillis = claims.getExpiration().getTime() - claims.getIssuedAt().getTime();
+
+        assertThat(lifetimeMillis).isEqualTo(1_209_600_000L);
     }
 }

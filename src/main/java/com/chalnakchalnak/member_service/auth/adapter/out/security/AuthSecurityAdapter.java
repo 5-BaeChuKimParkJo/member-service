@@ -5,6 +5,8 @@ import com.chalnakchalnak.member_service.auth.application.mapper.AuthMapper;
 import com.chalnakchalnak.member_service.auth.application.port.dto.SignInDto;
 import com.chalnakchalnak.member_service.auth.application.port.dto.out.SignInResponseDto;
 import com.chalnakchalnak.member_service.auth.application.port.out.AuthSecurityPort;
+import com.chalnakchalnak.member_service.auth.common.exception.BaseException;
+import com.chalnakchalnak.member_service.auth.common.response.BaseResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -44,7 +46,11 @@ public class AuthSecurityAdapter implements AuthSecurityPort {
 
     @Override
     public String getMemberUuidByRefreshToken(String token) {
-        return jwtTokenProvider.extractRefreshMemberUuid(token);
+        try {
+            return jwtTokenProvider.extractRefreshMemberUuid(token);
+        } catch (RuntimeException exception) {
+            throw new BaseException(BaseResponseStatus.INVALID_REFRESH_TOKEN);
+        }
     }
 
     @Override

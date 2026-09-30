@@ -8,6 +8,7 @@ import com.chalnakchalnak.member_service.auth.application.port.out.GenerateUuidP
 import com.chalnakchalnak.member_service.auth.common.exception.BaseException;
 import com.chalnakchalnak.member_service.auth.common.response.BaseResponseStatus;
 import com.chalnakchalnak.member_service.grade.Grade;
+import com.chalnakchalnak.member_service.grade.GradePolicy;
 import com.chalnakchalnak.member_service.grade.GradeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -47,7 +48,7 @@ class AccountRegistrationServiceTest {
                 authSecurity,
                 uuidGenerator,
                 memberProfiles,
-                grades,
+                new GradePolicy(grades),
                 new AuthMapper()
         );
     }
@@ -63,7 +64,7 @@ class AccountRegistrationServiceTest {
                 .build();
         when(uuidGenerator.generateUuid()).thenReturn("member-uuid");
         when(authSecurity.encryptPassword("plain-password")).thenReturn("hashed-password");
-        when(grades.findByOrderNumber(5)).thenReturn(Optional.of(defaultGrade));
+        when(grades.findAll()).thenReturn(List.of(defaultGrade));
 
         service.register(command());
 
@@ -99,7 +100,7 @@ class AccountRegistrationServiceTest {
     void failsClearlyWhenDefaultGradeIsMissing() {
         when(uuidGenerator.generateUuid()).thenReturn("member-uuid");
         when(authSecurity.encryptPassword("plain-password")).thenReturn("hashed-password");
-        when(grades.findByOrderNumber(5)).thenReturn(Optional.empty());
+        when(grades.findAll()).thenReturn(List.of());
 
         assertStatus(BaseResponseStatus.DEFAULT_GRADE_NOT_CONFIGURED);
         verify(authRepository, never()).save(org.mockito.ArgumentMatchers.any());
@@ -109,6 +110,23 @@ class AccountRegistrationServiceTest {
                 org.mockito.ArgumentMatchers.anyString(),
                 org.mockito.ArgumentMatchers.anyDouble()
         );
+    }
+
+    @Test
+    void rejectsDefaultGradeThatDoesNotContainInitialPoints() {
+        Grade invalidDefault = Grade.builder()
+                .gradeUuid("grade-default")
+                .gradeName("invalid-default")
+                .minPoint(200)
+                .maxPoint(299)
+                .orderNumber(5)
+                .build();
+        when(uuidGenerator.generateUuid()).thenReturn("member-uuid");
+        when(authSecurity.encryptPassword("plain-password")).thenReturn("hashed-password");
+        when(grades.findAll()).thenReturn(List.of(invalidDefault));
+
+        assertStatus(BaseResponseStatus.DEFAULT_GRADE_NOT_CONFIGURED);
+        verify(authRepository, never()).save(org.mockito.ArgumentMatchers.any());
     }
 
     private void assertStatus(BaseResponseStatus status) {

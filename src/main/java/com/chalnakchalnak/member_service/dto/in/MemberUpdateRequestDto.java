@@ -38,11 +38,7 @@ public class MemberUpdateRequestDto {
         return MemberUpdateRequestDto.builder()
                 .memberUuid(memberUuid)
                 .nickname(memberUpdateRequestVo.getNickname())
-                .gradeUuid(memberUpdateRequestVo.getGradeUuid())
-                .honor(memberUpdateRequestVo.getHonor())
-                .state(memberUpdateRequestVo.getState())
                 .profileImageKey(memberUpdateRequestVo.getProfileImageKey())
-                .point(memberUpdateRequestVo.getPoint())
                 .build();
     }
 }

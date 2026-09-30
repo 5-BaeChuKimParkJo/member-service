@@ -88,9 +88,9 @@ public class JwtTokenProvider {
      */
     public String generateRefreshToken(String role, String memberUuid) {
         Date now = new Date();
-        Long expireSeconds = Objects.requireNonNull(env.getProperty("JWT.token.refresh-expire-time", Long.class),
+        Long expireMillis = Objects.requireNonNull(env.getProperty("JWT.token.refresh-expire-time", Long.class),
                 "JWT.token.refresh-expire-time is missing");
-        Date expiration = new Date(now.getTime() + expireSeconds * 1000L);
+        Date expiration = new Date(now.getTime() + expireMillis);
 
         return Jwts.builder()
                 .signWith(getSignKey())
