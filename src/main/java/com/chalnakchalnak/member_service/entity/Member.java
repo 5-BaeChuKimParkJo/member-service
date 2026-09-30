@@ -39,7 +39,7 @@ public class Member extends BaseEntity {
     @Column(name = "profile_image_key")
     private String profileImageKey;
 
-    @Column(name = "point", nullable = false, columnDefinition = "BIGINT DEFAULT 0")
+    @Column(name = "point", nullable = false)
     private Double point;
 
     @Builder

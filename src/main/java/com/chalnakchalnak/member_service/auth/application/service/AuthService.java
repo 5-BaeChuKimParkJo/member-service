@@ -87,7 +87,7 @@ public class AuthService implements AuthUseCase {
     @Override
     @Transactional
     public SignInResponseDto reissueAllToken(ReissueAllTokenRequestDto reissueAllTokenRequestDto) {
-        final String memberUuid = authSecurityPort.getMemberUuidByToken(reissueAllTokenRequestDto.getRefreshToken());
+        final String memberUuid = authSecurityPort.getMemberUuidByRefreshToken(reissueAllTokenRequestDto.getRefreshToken());
 
         if (!tokenStorePort.getRefreshToken(memberUuid)
                 .equals(reissueAllTokenRequestDto.getRefreshToken())
@@ -107,7 +107,7 @@ public class AuthService implements AuthUseCase {
     @Transactional
     public void signOut(SignOutDto signOutDto) {
         try {
-            final String memberUuid = authSecurityPort.getMemberUuidByToken(signOutDto.getRefreshToken());
+            final String memberUuid = authSecurityPort.getMemberUuidByRefreshToken(signOutDto.getRefreshToken());
 
             tokenStorePort.deleteRefreshToken(memberUuid);
         } catch (BaseException e) { }

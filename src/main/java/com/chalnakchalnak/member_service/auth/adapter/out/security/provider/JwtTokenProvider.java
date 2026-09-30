@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
-import java.util.Base64;
 import java.util.Date;
 import java.util.Objects;
 import java.util.function.Function;
@@ -18,6 +17,14 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 @Service
 public class JwtTokenProvider {
+
+    private static final String ACCESS_ISSUER = "cn-account";
+    private static final String REFRESH_ISSUER = "cn-account-refresh";
+    private static final String TOKEN_TYPE_CLAIM = "token_type";
+    private static final String MEMBER_UUID_CLAIM = "memberUuid";
+    private static final String ROLE_CLAIM = "role";
+    private static final String ACCESS_TOKEN_TYPE = "access";
+    private static final String REFRESH_TOKEN_TYPE = "refresh";
 
     private final Environment env;
 
@@ -66,9 +73,10 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .signWith(getSignKey())
-                .claim("token_type", "access")
-                .claim("role", role)
-                .claim("memberUuid", memberUuid)
+                .issuer(ACCESS_ISSUER)
+                .claim(TOKEN_TYPE_CLAIM, ACCESS_TOKEN_TYPE)
+                .claim(ROLE_CLAIM, role)
+                .claim(MEMBER_UUID_CLAIM, memberUuid)
                 .issuedAt(now)
                 .expiration(expiration)
                 .compact();
@@ -86,9 +94,10 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .signWith(getSignKey())
-                .claim("token_type", "refresh")
-                .claim("role", role)
-                .claim("memberUuid", memberUuid)
+                .issuer(REFRESH_ISSUER)
+                .claim(TOKEN_TYPE_CLAIM, REFRESH_TOKEN_TYPE)
+                .claim(ROLE_CLAIM, role)
+                .claim(MEMBER_UUID_CLAIM, memberUuid)
                 .issuedAt(now)
                 .expiration(expiration)
                 .compact();
@@ -98,13 +107,26 @@ public class JwtTokenProvider {
     /**
      * 5. memberUuid 추출
      */
+    public String extractAccessMemberUuid(String token) {
+        return extractMemberUuid(token, ACCESS_ISSUER, ACCESS_TOKEN_TYPE);
+    }
+
+    public String extractRefreshMemberUuid(String token) {
+        return extractMemberUuid(token, REFRESH_ISSUER, REFRESH_TOKEN_TYPE);
+    }
+
     public String extractMemberUuid(String token) {
-        try {
-            return extractClaim(token, claims -> claims.get("uuid", String.class));
-        } catch (ExpiredJwtException e) {
-            log.error("만료된 토큰입니다");
-            throw new RuntimeException("만료된 토큰입니다");
+        return extractAccessMemberUuid(token);
+    }
+
+    private String extractMemberUuid(String token, String expectedIssuer, String expectedType) {
+        Claims claims = extractAllClaims(token);
+        if (!expectedIssuer.equals(claims.getIssuer())
+                || !expectedType.equals(claims.get(TOKEN_TYPE_CLAIM, String.class))) {
+            throw new IllegalArgumentException("Expected " + expectedType + " token");
         }
+
+        return claims.get(MEMBER_UUID_CLAIM, String.class);
     }
 
     /**
@@ -112,7 +134,7 @@ public class JwtTokenProvider {
      */
     public String extractRole(String token) {
         try {
-            return extractClaim(token, claims -> claims.get("role", String.class));
+            return extractClaim(token, claims -> claims.get(ROLE_CLAIM, String.class));
         } catch (ExpiredJwtException e) {
             log.error("만료된 토큰입니다");
             throw new RuntimeException("만료된 토큰입니다");
@@ -124,8 +146,6 @@ public class JwtTokenProvider {
      */
     public Key getSignKey() {
         String secret = Objects.requireNonNull(env.getProperty("JWT.secret-key"));
-//        byte[] decodedKey = Base64.getDecoder().decode(secret);
-
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 }

@@ -43,8 +43,8 @@ public class AuthSecurityAdapter implements AuthSecurityPort {
     }
 
     @Override
-    public String getMemberUuidByToken(String token) {
-        return jwtTokenProvider.extractMemberUuid(token);
+    public String getMemberUuidByRefreshToken(String token) {
+        return jwtTokenProvider.extractRefreshMemberUuid(token);
     }
 
     @Override
