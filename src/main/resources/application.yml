@@ -49,6 +49,10 @@ coolsms:
   sender-phone-number: ${COOLSMS_PHONE_NUMBER}
   domain: https://api.coolsms.co.kr
 
+verification:
+  mode: ${VERIFICATION_MODE:sms}
+  fixed-code: ${FIXED_VERIFICATION_CODE:000000}
+
 JWT:
   secret-key: ${JWT_SECRET}
   token:

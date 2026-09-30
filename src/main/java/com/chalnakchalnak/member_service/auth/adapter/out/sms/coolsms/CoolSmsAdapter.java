@@ -7,9 +7,11 @@ import lombok.RequiredArgsConstructor;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnProperty(prefix = "verification", name = "mode", havingValue = "sms", matchIfMissing = true)
 @RequiredArgsConstructor
 public class CoolSmsAdapter implements SmsPort {
 

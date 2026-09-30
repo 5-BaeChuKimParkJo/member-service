@@ -5,6 +5,7 @@ import com.chalnakchalnak.member_service.auth.application.port.in.IdentityVerifi
 import com.chalnakchalnak.member_service.auth.application.port.dto.in.SendVerificationCodeRequestDto;
 import com.chalnakchalnak.member_service.auth.application.port.dto.in.VerifyCodeRequestDto;
 import com.chalnakchalnak.member_service.auth.application.port.out.SmsPort;
+import com.chalnakchalnak.member_service.auth.application.port.out.VerificationCodeGenerator;
 import com.chalnakchalnak.member_service.auth.application.port.out.VerificationCodeStorePort;
 import com.chalnakchalnak.member_service.auth.common.exception.BaseException;
 import com.chalnakchalnak.member_service.auth.common.response.BaseResponseStatus;
@@ -20,6 +21,7 @@ public class IdentityVerificationService implements IdentityVerificationUseCase 
     private final SmsPort smsPort;
     private final VerificationCodeStorePort verificationCodeStorePort;
     private final IdentityVerificationDtoMapper identityVerificationDtoMapper;
+    private final VerificationCodeGenerator verificationCodeGenerator;
 
     @Override
     @Transactional
@@ -28,8 +30,7 @@ public class IdentityVerificationService implements IdentityVerificationUseCase 
             throw new BaseException(BaseResponseStatus.SEND_LIMITED);
         }
 
-        final String verificationCode =
-                String.valueOf((int)(Math.random() * 1_000_000) + 1_000_000).substring(1);
+        final String verificationCode = verificationCodeGenerator.generate();
 
         smsPort.sendSms(sendVerificationCodeRequestDto.getPhoneNumber(), verificationCode);
         verificationCodeStorePort.saveCode(sendVerificationCodeRequestDto.getPhoneNumber(), verificationCode);

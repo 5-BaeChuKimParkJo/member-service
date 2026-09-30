@@ -28,6 +28,10 @@ coolsms:
   sender-phone-number: "01000000000"
   domain: https://api.coolsms.co.kr
 
+verification:
+  mode: sms
+  fixed-code: "000000"
+
 JWT:
   secret-key: 0123456789012345678901234567890123456789012345678901234567890123
   token:
