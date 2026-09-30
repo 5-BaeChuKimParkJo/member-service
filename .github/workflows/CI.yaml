@@ -2,7 +2,7 @@ name: Build homelab image
 
 on:
   push:
-    branches: [develop]
+    branches: [develop, "codex/**"]
   workflow_dispatch:
 
 permissions:
