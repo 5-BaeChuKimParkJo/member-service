@@ -10,37 +10,33 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
-
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final AuthenticationProvider daoAuthenticationProvider;
+  private final AuthenticationProvider daoAuthenticationProvider;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(
-                        authorizeRequests -> authorizeRequests
-                                .requestMatchers(
-                                        "/**"
-//                                        "/api/v1/auth/**",
-//                                        "/swagger-ui/**",
-//                                        "/v3/api-docs/**",
-//                                        "/error"
-                                )
-                                .permitAll()
-                                .anyRequest()
-                                .authenticated()
-                )
-                .sessionManagement(
-                        sessionManagement -> sessionManagement
-                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .authenticationProvider(daoAuthenticationProvider);
-        return http.build();
-    }
-
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http.csrf(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(
+            authorizeRequests ->
+                authorizeRequests
+                    .requestMatchers(
+                        "/**"
+                        //                                        "/api/v1/auth/**",
+                        //                                        "/swagger-ui/**",
+                        //                                        "/v3/api-docs/**",
+                        //                                        "/error"
+                        )
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated())
+        .sessionManagement(
+            sessionManagement ->
+                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authenticationProvider(daoAuthenticationProvider);
+    return http.build();
+  }
 }

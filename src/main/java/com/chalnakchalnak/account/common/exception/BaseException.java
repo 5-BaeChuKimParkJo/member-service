@@ -1,15 +1,14 @@
 package com.chalnakchalnak.account.common.exception;
 
-import com.chalnakchalnak.account.common.entity.BaseResponseStatus;
+import com.chalnakchalnak.account.common.error.AccountErrorCode;
 import lombok.Getter;
 
 @Getter
 public class BaseException extends RuntimeException {
 
-    private final BaseResponseStatus status;
+  private final AccountErrorCode status;
 
-    public BaseException(BaseResponseStatus status) {
-        this.status = status;
-    }
+  public BaseException(AccountErrorCode status) {
+    this.status = status;
+  }
 }
-

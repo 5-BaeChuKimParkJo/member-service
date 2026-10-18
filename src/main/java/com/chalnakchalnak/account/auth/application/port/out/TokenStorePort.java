@@ -1,10 +1,12 @@
 package com.chalnakchalnak.account.auth.application.port.out;
 
-import com.chalnakchalnak.account.auth.application.port.dto.StoreRefreshTokenDto;
+import com.chalnakchalnak.account.auth.application.command.StoreRefreshTokenCommand;
 
 public interface TokenStorePort {
 
-    void saveRefreshToken(StoreRefreshTokenDto storeRefreshTokenDto);
-    String getRefreshToken(String memberUuid);
-    void deleteRefreshToken(String memberUuid);
+  void saveRefreshToken(StoreRefreshTokenCommand storeRefreshTokenDto);
+
+  String getRefreshToken(String memberUuid);
+
+  void deleteRefreshToken(String memberUuid);
 }

@@ -12,32 +12,34 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
 
-    private static final String BEARER_TOKEN_PREFIX = "Bearer";
+  private static final String BEARER_TOKEN_PREFIX = "Bearer";
 
-    @Bean
-    public OpenAPI openAPI() {
+  @Bean
+  public OpenAPI openAPI() {
 
-        String securityJwtName = "JWT";
-        SecurityRequirement securityRequirement = new SecurityRequirement().addList(securityJwtName);
-        Components components = new Components()
-                .addSecuritySchemes(securityJwtName, new SecurityScheme()
-                        .name(securityJwtName)
-                        .type(SecurityScheme.Type.HTTP)
-                        .scheme(BEARER_TOKEN_PREFIX)
-                        .bearerFormat(securityJwtName));
+    String securityJwtName = "JWT";
+    SecurityRequirement securityRequirement = new SecurityRequirement().addList(securityJwtName);
+    Components components =
+        new Components()
+            .addSecuritySchemes(
+                securityJwtName,
+                new SecurityScheme()
+                    .name(securityJwtName)
+                    .type(SecurityScheme.Type.HTTP)
+                    .scheme(BEARER_TOKEN_PREFIX)
+                    .bearerFormat(securityJwtName));
 
-        return new OpenAPI()
-                .addSecurityItem(securityRequirement)
-                .components(components)
-                .addServersItem(new Server().url("/member-service"))
-                .info(apiInfo());
-    }
+    return new OpenAPI()
+        .addSecurityItem(securityRequirement)
+        .components(components)
+        .addServersItem(new Server().url("/member-service"))
+        .info(apiInfo());
+  }
 
-    private Info apiInfo() {
-        return new Info()
-                .title("MSA - MEMBER SERVICE 문서")
-                .description("MEMBER API 테스트를 위한 Swagger UI")
-                .version("1.0.0");
-    }
-
+  private Info apiInfo() {
+    return new Info()
+        .title("MSA - MEMBER SERVICE 문서")
+        .description("MEMBER API 테스트를 위한 Swagger UI")
+        .version("1.0.0");
+  }
 }

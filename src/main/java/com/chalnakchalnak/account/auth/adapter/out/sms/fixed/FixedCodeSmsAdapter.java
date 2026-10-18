@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(prefix = "verification", name = "mode", havingValue = "fixed")
 public class FixedCodeSmsAdapter implements SmsPort {
 
-    @Override
-    public void sendSms(String phoneNumber, String code) {
-        // Homelab mode intentionally performs no external SMS request.
-    }
+  @Override
+  public void sendSms(String phoneNumber, String code) {
+    // Homelab mode intentionally performs no external SMS request.
+  }
 }

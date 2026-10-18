@@ -1,20 +1,23 @@
 package com.chalnakchalnak.account.auth.application.port.out;
 
-import com.chalnakchalnak.account.auth.application.port.dto.GetMemberIdDto;
-import com.chalnakchalnak.account.auth.application.port.dto.SignUpDto;
-import com.chalnakchalnak.account.auth.application.port.dto.out.AuthResponseDto;
-import com.chalnakchalnak.account.auth.application.port.dto.out.GetMemberIdResponseDto;
-
+import com.chalnakchalnak.account.auth.application.command.StoreAuthCommand;
+import com.chalnakchalnak.account.auth.application.query.MemberIdLookupQuery;
+import com.chalnakchalnak.account.auth.application.result.AuthResult;
+import com.chalnakchalnak.account.auth.application.result.MemberIdResult;
 import java.util.Optional;
 
 public interface AuthRepositoryPort {
 
-    void save(SignUpDto signUpDto);
-    Boolean existsByMemberId(String memberId);
-//    Boolean existsByNickname(String nickname);
-    Boolean existsByPhoneNumber(String phoneNumber);
-    Optional<AuthResponseDto> findByMemberId(String memberId);
-    Optional<GetMemberIdResponseDto> findMemberIdByPhoneNumber (GetMemberIdDto getMemberIdDto);
-    void resetPassword(String phoneNumber, String encryptedPassword);
+  void save(StoreAuthCommand signUpDto);
 
+  Boolean existsByMemberId(String memberId);
+
+  //    Boolean existsByNickname(String nickname);
+  Boolean existsByPhoneNumber(String phoneNumber);
+
+  Optional<AuthResult> findByMemberId(String memberId);
+
+  Optional<MemberIdResult> findMemberIdByPhoneNumber(MemberIdLookupQuery getMemberIdDto);
+
+  void resetPassword(String phoneNumber, String encryptedPassword);
 }

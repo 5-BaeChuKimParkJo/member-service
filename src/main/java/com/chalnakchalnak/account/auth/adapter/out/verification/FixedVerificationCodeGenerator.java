@@ -9,14 +9,14 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(prefix = "verification", name = "mode", havingValue = "fixed")
 public class FixedVerificationCodeGenerator implements VerificationCodeGenerator {
 
-    private final String code;
+  private final String code;
 
-    public FixedVerificationCodeGenerator(@Value("${verification.fixed-code}") String code) {
-        this.code = code;
-    }
+  public FixedVerificationCodeGenerator(@Value("${verification.fixed-code}") String code) {
+    this.code = code;
+  }
 
-    @Override
-    public String generate() {
-        return code;
-    }
+  @Override
+  public String generate() {
+    return code;
+  }
 }

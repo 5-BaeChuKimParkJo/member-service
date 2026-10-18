@@ -1,10 +1,11 @@
 package com.chalnakchalnak.account.auth.application.port.in;
 
-import com.chalnakchalnak.account.auth.application.port.dto.in.SendVerificationCodeRequestDto;
-import com.chalnakchalnak.account.auth.application.port.dto.in.VerifyCodeRequestDto;
+import com.chalnakchalnak.account.auth.application.command.SendVerificationCodeCommand;
+import com.chalnakchalnak.account.auth.application.command.VerifyCodeCommand;
 
 public interface IdentityVerificationUseCase {
 
-    void sendVerificationCode(SendVerificationCodeRequestDto sendVerificationCodeRequestDto);
-    Boolean verifyCode(VerifyCodeRequestDto verifyCodeRequestDto);
+  void sendVerificationCode(SendVerificationCodeCommand sendVerificationCodeRequestDto);
+
+  Boolean verifyCode(VerifyCodeCommand verifyCodeRequestDto);
 }
