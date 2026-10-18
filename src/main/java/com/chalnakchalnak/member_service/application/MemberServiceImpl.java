@@ -31,6 +31,9 @@ public class MemberServiceImpl implements MemberService {
     @Value("${cloud.aws.region.static}")
     private String region;
 
+    @Value("${cloud.aws.s3.public-base-url:}")
+    private String profileImageBaseUrl;
+
     private final MemberRepository memberRepository;
     private final MemberRepositoryCustom memberRepositoryCustom;
     private final GradeRepository gradeRepository;
@@ -41,7 +44,7 @@ public class MemberServiceImpl implements MemberService {
     public ChatroomMemberResponseDto getChatMember(String memberUuid) {
         Member member = memberRepository.findByMemberUuid(memberUuid)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXISTS_MEMBER));
-        return ChatroomMemberResponseDto.from(member, bucket, region);
+        return ChatroomMemberResponseDto.from(member, bucket, region, profileImageBaseUrl);
     }
 
     @Cacheable(value = "member", key = "#memberUuid")
@@ -49,7 +52,7 @@ public class MemberServiceImpl implements MemberService {
     public MemberResponseDto getMember(String memberUuid) {
         Member member = memberRepository.findByMemberUuid(memberUuid)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NO_EXISTS_MEMBER));
-        return MemberResponseDto.from(member, bucket, region);
+        return MemberResponseDto.from(member, bucket, region, profileImageBaseUrl);
     }
 
     @Cacheable(value = "memberList", key = "#memberUuidListDto.memberUuidList")
@@ -63,7 +66,7 @@ public class MemberServiceImpl implements MemberService {
 
         List<MemberResponseDto> memberResponseDtoList = new ArrayList<>();
         for (Member member : memberList) {
-            memberResponseDtoList.add(MemberResponseDto.from(member, bucket, region));
+            memberResponseDtoList.add(MemberResponseDto.from(member, bucket, region, profileImageBaseUrl));
         }
 
         return memberResponseDtoList;
@@ -73,7 +76,7 @@ public class MemberServiceImpl implements MemberService {
     public List<MemberResponseDto> getAllMemberList() {
          return memberRepository.findAll()
                 .stream()
-                .map(member -> MemberResponseDto.from(member, bucket, region))
+                .map(member -> MemberResponseDto.from(member, bucket, region, profileImageBaseUrl))
                 .toList();
     }
 

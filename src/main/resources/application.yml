@@ -42,6 +42,9 @@ cloud:
       static: ${AWS_REGION}
     s3:
       bucket: ${AWS_S3_BUCKET_NAME}
+      endpoint: ${S3_ENDPOINT:}
+      force-path-style: ${S3_FORCE_PATH_STYLE:false}
+      public-base-url: ${PROFILE_IMAGE_BASE_URL:}
 
 coolsms:
   api-key: ${COOLSMS_API_KEY}

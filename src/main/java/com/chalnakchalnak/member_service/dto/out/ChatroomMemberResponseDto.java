@@ -2,6 +2,7 @@ package com.chalnakchalnak.member_service.dto.out;
 
 import com.chalnakchalnak.member_service.entity.Member;
 import com.chalnakchalnak.member_service.vo.out.ChatroomMemberResponseVo;
+import com.chalnakchalnak.member_service.util.ProfileImageUrls;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -22,8 +23,11 @@ public class ChatroomMemberResponseDto implements Serializable {
     }
 
     public static ChatroomMemberResponseDto from(Member member, String bucket, String region) {
-        String imageUrl = !"".equals(member.getProfileImageKey()) && member.getProfileImageKey() != null ?
-                "https://" + bucket + ".s3." + region + ".amazonaws.com/" + member.getProfileImageKey() : null;
+        return from(member, bucket, region, "");
+    }
+
+    public static ChatroomMemberResponseDto from(Member member, String bucket, String region, String publicBaseUrl) {
+        String imageUrl = ProfileImageUrls.resolve(member.getProfileImageKey(), bucket, region, publicBaseUrl);
         return ChatroomMemberResponseDto.builder()
                 .memberUuid(member.getMemberUuid())
                 .nickname(member.getNickname())

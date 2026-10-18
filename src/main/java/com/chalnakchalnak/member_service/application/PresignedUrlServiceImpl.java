@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.UriComponentsBuilder;
 
 
 import java.nio.charset.StandardCharsets;
@@ -43,6 +44,9 @@ public class PresignedUrlServiceImpl implements PresignedUrlService{
 
     @Value("${cloud.aws.credentials.secret-key}")
     private String secretKey;
+
+    @Value("${cloud.aws.s3.endpoint:}")
+    private String endpoint;
 
     @Override
     public PresignedUrlResponseDto generatePresignedPost(PresignedUrlRequestDto presignedUrlRequestDto) {
@@ -86,7 +90,9 @@ public class PresignedUrlServiceImpl implements PresignedUrlService{
         fields.put("Policy", policy);
         fields.put("X-Amz-Signature", signature);
 
-        String url = "https://" + this.bucket + ".s3." + this.region + ".amazonaws.com/";
+        String url = endpoint == null || endpoint.isBlank()
+                ? "https://" + this.bucket + ".s3." + this.region + ".amazonaws.com/"
+                : UriComponentsBuilder.fromUriString(endpoint).pathSegment(bucket).path("/").build().toUriString();
 
         return PresignedUrlResponseDto.builder()
                 .url(url)

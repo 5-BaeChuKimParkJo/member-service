@@ -4,6 +4,7 @@ import com.chalnakchalnak.member_service.entity.Honor;
 import com.chalnakchalnak.member_service.entity.Member;
 import com.chalnakchalnak.member_service.entity.State;
 import com.chalnakchalnak.member_service.vo.out.MemberResponseVo;
+import com.chalnakchalnak.member_service.util.ProfileImageUrls;
 import lombok.Builder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -38,9 +39,12 @@ public class MemberResponseDto implements Serializable {
     }
 
     public static MemberResponseDto from(Member member, String bucket, String region) {
+        return from(member, bucket, region, "");
+    }
 
-        String imageUrl = !"".equals(member.getProfileImageKey()) && member.getProfileImageKey() != null ?
-                "https://" + bucket + ".s3." + region + ".amazonaws.com/" + member.getProfileImageKey() : null;
+    public static MemberResponseDto from(Member member, String bucket, String region, String publicBaseUrl) {
+
+        String imageUrl = ProfileImageUrls.resolve(member.getProfileImageKey(), bucket, region, publicBaseUrl);
 
         return MemberResponseDto.builder()
                 .memberUuid(member.getMemberUuid())
