@@ -74,3 +74,31 @@ RED→GREEN 및 전체 검사로 검증했다. 별도 Minor 지적은 없었다.
 오류 응답이 이번 작업으로 전부 정리되는 것은 아니다. 캐시 TTL·지연·무효화·
 chat/list 캐시 장애 정책도 기존대로이며 모든 캐시 장애를 흡수하지 않는다.
 PostgreSQL 전체 CI·이미지 발행·배포 근거는 작성자가 별도로 확인한다.
+
+## 실제 CI·운영 확인 · 2026-10-29
+
+최종 런타임 커밋은 `919feb590bbe3d5a33d188d887090a813ff0029b`다.
+[CI 40881570424](https://github.com/5-BaeChuKimParkJo/member-service/actions/runs/40881570424)
+의 전체 `./gradlew clean check bootJar`와 GHCR 이미지 발행이 성공했다. 실제 로그에서
+test task 실행과 `BUILD SUCCESSFUL in 57s`를 확인했다. 로컬의 임시 Docker 테스트
+제외 설정은 커밋하지 않았으며 CI에 전달하지 않았다. 기존 PostgreSQL 트랜잭션
+테스트는 원래대로 전체 검사 대상이다.
+
+자동 GitOps 커밋 `d952381d970b06d22f6f93be6dff0d99110287b2`는 account-service
+이미지만 새 SHA로 갱신했다. 실제 Deployment 이미지, 새 파드 Ready=true/재시작 0,
+rollout 완료와 Argo Synced/Healthy를 확인했다. Spring 기동 중 첫 50초 대기 제한은
+넘겼고 초기 readiness 연결 거부 이벤트가 있었다. 이미지 다운로드·파드 상태를
+확인한 후 실제 준비 완료를 다시 확인했다.
+
+운영 HTTP 검증은 데이터 변경 없는 GET만 사용했다.
+
+- 동일한 없는 회원 조회: 배포 전 500/code4903 → 배포 후 404/code2002,
+  기존 공개 메시지 일치, JSON에 httpStatus 미포함.
+- 기존 경매 판매자 조회: 200 및 판매자 UUID 일치.
+- 두 외부 서비스 경로의 인증/인증번호 API 4개: 잘못된 메서드에 405/code4902.
+- 실제 Chromium 데스크톱·모바일: 경매 제목·판매자 표시, 가로 넘침 없음,
+  입찰·결제 POST 0건.
+
+실제 DB/Redis 장애나 닉네임 변경·업로드·로그인 실패를 운영에 주입하지 않았다.
+그 경계의 오류 처리 근거는 격리된 회귀 테스트이며 운영 검증은 정상 조회 및
+읽기 전용 오류 응답 확인이다.

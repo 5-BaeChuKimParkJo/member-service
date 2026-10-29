@@ -43,7 +43,13 @@ Review fix pass: reproduce upload-message and auth method-mismatch regressions
 
 ### Task 2: Publish and verify
 
-- [ ] Push main; verify the exact-SHA full CI and GHCR publication.
-- [ ] Confirm exact new image/rollout, GitOps tag and Argo health.
-- [ ] Read-only live check: missing profile 404/code 2002; existing seller 200.
-- [ ] Record evidence/limits, update stale cache documentation and sync GitOps.
+- [x] Push main; verify the exact-SHA full CI and GHCR publication.
+- [x] Confirm exact new image/rollout, GitOps tag and Argo health.
+- [x] Read-only live check: missing profile 404/code 2002; existing seller 200.
+- [x] Record evidence/limits, update stale cache documentation and sync GitOps.
+
+Evidence: runtime 919feb590bbe3d5a33d188d887090a813ff0029b, CI40881570424 success,
+GitOps d952381d970b06d22f6f93be6dff0d99110287b2. Exact new pod ready/restarts0,
+rollout complete, Argo Synced/Healthy. Missing member404/code2002, existing seller200,
+auth method mismatch405/code4902 on four external routes, desktop/mobile read-only
+auction-detail smoke passed. Details and limits: docs/member-error-mapping.md.
