@@ -1,8 +1,10 @@
 package com.chalnakchalnak.account.common.exception;
 
+import com.chalnakchalnak.account.auth.common.response.AuthErrorCode;
 import com.chalnakchalnak.account.common.entity.ExceptionResponseEntity;
 import com.chalnakchalnak.account.common.error.AccountErrorCode;
 import io.swagger.v3.oas.annotations.Hidden;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -44,16 +46,42 @@ public class BaseExceptionHandler {
 
     String errorCode = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
 
-    AccountErrorCode status;
-
     try {
-      status = AccountErrorCode.valueOf(errorCode);
+      var status = AccountErrorCode.valueOf(errorCode);
+      return new ResponseEntity<>(
+          new ExceptionResponseEntity<>(status), status.getHttpStatusCode());
     } catch (IllegalArgumentException ex) {
-      status = AccountErrorCode.INVALID_INPUT; // 기본 fallback
+      var status = AccountErrorCode.INVALID_INPUT;
+      return new ResponseEntity<>(
+          new ExceptionResponseEntity<>(status, errorCode), status.getHttpStatusCode());
     }
+  }
 
-    ExceptionResponseEntity<Void> response = new ExceptionResponseEntity<>(status);
-    return new ResponseEntity<>(response, response.httpStatus());
+  @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+  public ResponseEntity<?> handleMethodNotAllowed(
+      HttpRequestMethodNotSupportedException ex, HttpServletRequest request) {
+    // Method matching can fail before a controller is selected, so package-scoped advice cannot
+    // apply.
+    String path = request.getRequestURI().substring(request.getContextPath().length());
+    for (String prefix :
+        new String[] {
+          "/api/v1/auth",
+          "/auth-service/api/v1/auth",
+          "/account-service/api/v1/auth",
+          "/api/v1/identity-verification",
+          "/auth-service/api/v1/identity-verification",
+          "/account-service/api/v1/identity-verification"
+        }) {
+      if (path.equals(prefix) || path.startsWith(prefix + "/")) {
+        return new ResponseEntity<>(
+            new com.chalnakchalnak.account.auth.common.exception.ExceptionResponseEntity<>(
+                AuthErrorCode.METHOD_NOT_ALLOWED),
+            AuthErrorCode.METHOD_NOT_ALLOWED.getHttpStatusCode());
+      }
+    }
+    return new ResponseEntity<>(
+        new ExceptionResponseEntity<>(AccountErrorCode.METHOD_NOT_ALLOWED),
+        AccountErrorCode.METHOD_NOT_ALLOWED.getHttpStatusCode());
   }
 
   @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -82,9 +110,7 @@ public class BaseExceptionHandler {
   public ResponseEntity<ExceptionResponseEntity<Void>> handleAllExceptions(Exception ex) {
     AccountErrorCode status;
 
-    if (ex instanceof HttpRequestMethodNotSupportedException) {
-      status = AccountErrorCode.METHOD_NOT_ALLOWED;
-    } else if (ex instanceof NoHandlerFoundException) {
+    if (ex instanceof NoHandlerFoundException) {
       status = AccountErrorCode.NOT_FOUND;
     } else if (ex instanceof MethodArgumentTypeMismatchException) {
       status = AccountErrorCode.BAD_REQUEST_INVALID_PARAM;

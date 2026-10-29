@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -24,6 +25,8 @@ import com.chalnakchalnak.account.common.exception.BaseException;
 import com.chalnakchalnak.account.common.exception.BaseExceptionHandler;
 import com.chalnakchalnak.account.member.adapter.in.web.MemberController;
 import com.chalnakchalnak.account.member.application.port.in.MemberUseCase;
+import com.chalnakchalnak.account.profile.adapter.in.web.ProfileImageUploadController;
+import com.chalnakchalnak.account.profile.application.port.in.ProfileImageUseCase;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.dao.DataAccessResourceFailureException;
@@ -52,6 +55,7 @@ class MemberErrorResponseTest {
     Object authAdvice = new AuthBaseExceptionHandler();
     return MockMvcBuilders.standaloneSetup(
             new MemberController(members),
+            new ProfileImageUploadController(mock(ProfileImageUseCase.class)),
             new AuthController(auth, new AuthWebMapper()),
             new IdentityVerificationController(verification, new IdentityVerificationWebMapper()))
         .setControllerAdvice(
@@ -181,6 +185,50 @@ class MemberErrorResponseTest {
     mvc.perform(post("/api/v1/auth/sign-in").contentType("application/json").content("{"))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.code").value(4905));
+  }
+
+  @ParameterizedTest
+  @ValueSource(booleans = {true, false})
+  void unsupportedProfileFormatRetainsAnActionableMessage(boolean authFirst) throws Exception {
+    mvc(authFirst)
+        .perform(
+            post("/api/v1/member/presigned-url")
+                .header("X-Member-Uuid", "fixture-member")
+                .contentType("application/json")
+                .content("{\"contentType\":\"application/pdf\"}"))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.code").value(902))
+        .andExpect(jsonPath("$.message").value("지원하지 않는 이미지 형식입니다."));
+  }
+
+  @ParameterizedTest
+  @ValueSource(booleans = {true, false})
+  void unsupportedAuthAndVerificationMethodsRetainAuthCodes(boolean authFirst) throws Exception {
+    var mvc = mvc(authFirst);
+    for (String route : AUTH_ROUTES) {
+      mvc.perform(get(route + "/sign-in"))
+          .andExpect(status().isMethodNotAllowed())
+          .andExpect(jsonPath("$.code").value(4902));
+      String verificationRoute =
+          route.substring(0, route.length() - "/auth".length()) + "/identity-verification";
+      mvc.perform(get(verificationRoute + "/sms/verify"))
+          .andExpect(status().isMethodNotAllowed())
+          .andExpect(jsonPath("$.code").value(4902));
+      mvc.perform(get("/fixture-context" + route + "/sign-in").contextPath("/fixture-context"))
+          .andExpect(status().isMethodNotAllowed())
+          .andExpect(jsonPath("$.code").value(4902));
+    }
+  }
+
+  @ParameterizedTest
+  @ValueSource(booleans = {true, false})
+  void unsupportedMemberMethodsUseTheCommonErrorCode(boolean authFirst) throws Exception {
+    var mvc = mvc(authFirst);
+    for (String route : MEMBER_ROUTES) {
+      mvc.perform(delete(route + "/fixture-member"))
+          .andExpect(status().isMethodNotAllowed())
+          .andExpect(jsonPath("$.code").value(405));
+    }
   }
 
   @ParameterizedTest

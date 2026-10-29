@@ -35,7 +35,11 @@ Interface: existing status + {code, message}; no public signature changes.
 - [x] Apply scoped auth advice/priority and generic common runtime response.
 - [x] Run all local tests except the existing Docker-only transaction test,
   Spotless, ArchUnit, bootJar and commit-convention checks.
-- [ ] Obtain one independent diff review; address material findings and commit.
+- [x] Obtain one independent diff review; address material findings and commit.
+
+Review fix pass: reproduce upload-message and auth method-mismatch regressions
+(4 failures), preserve literal validation messages and route pre-controller auth
+405 codes by known API prefixes; final local 79 tests and all checks pass.
 
 ### Task 2: Publish and verify
 

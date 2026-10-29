@@ -23,6 +23,8 @@ merging all exception models would unnecessarily change application contracts.
 - Member unexpected runtime/DB errors: HTTP 500, code 500, generic public message;
   never return the raw exception message to clients.
 - Authentication/identity-verification error status, code and message remain as-is.
+- Preserve literal profile validation guidance with member code 902. Preserve auth
+  method-mismatch code 4902 before controller selection, including context paths.
 - Preserve canonical and legacy routes, successful response bodies and cache fallback.
 - No business rules, credentials, schema, dependencies or filter authentication changes.
 - No local Docker; existing PostgreSQL transaction test runs in unfiltered CI.
