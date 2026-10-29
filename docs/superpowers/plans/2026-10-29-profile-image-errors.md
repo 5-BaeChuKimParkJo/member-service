@@ -33,12 +33,18 @@ Interface: existing GET images?key=... and code/message JSON on failure.
 - [x] Add scoped advice and 413 code; preserve fixed public messages/no-store.
 - [x] Run all local Java checks/bootJar except the Docker-only transaction test;
   run the existing frontend default-profile tests and convention tool tests.
-- [ ] Commit and obtain one bounded independent diff review; fix material findings with RED→GREEN.
+- [x] Commit and obtain one bounded independent diff review; fix material findings with RED→GREEN.
 
 ### Task 2: Publish and verify
 
-- [ ] Push and verify exact-SHA unfiltered CI/GHCR publication.
-- [ ] Confirm exact image, rollout/Argo health and automatic GitOps commit.
-- [ ] Live GET invalid key400/missing object404/existing profile image200 where available;
+- [x] Push and verify exact-SHA unfiltered CI/GHCR publication.
+- [x] Confirm exact image, rollout/Argo health and automatic GitOps commit.
+- [x] Live GET invalid key400/missing object404/existing profile image200 where available;
   verify anonymous customer default-profile display without mutations.
-- [ ] Record proof/limits, sync GitOps and remove only this task's scratch.
+- [x] Record proof/limits, sync GitOps and remove only this task's scratch.
+
+Evidence: local Java97, frontend existing default-profile6, tooling11; no review
+findings. Full CI40887317311 success. Runtime0ccc995 ready/restarts0, rollout
+complete, Argo Synced/Healthy7ea636d1babb4cc81bc2e0a1072d02941bda03ab. Live image
+400/404/no-store and actual desktop/mobile default image passed. Existing uploaded
+photo sample unavailable; no production data created. Full details in docs/profile-image-errors.md.
