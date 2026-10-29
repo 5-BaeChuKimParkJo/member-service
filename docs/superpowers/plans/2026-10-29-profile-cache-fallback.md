@@ -27,15 +27,15 @@
 Files: new common/config/MemberCacheConfig.java, member/adapter/out/cache/MemberProfileCacheErrorHandler.java, member/MemberProfileCacheFallbackTest.java and member/MemberProfileCacheErrorHandlerTest.java.
 Interface: CacheErrorHandler get/put for MemberCacheNames.MEMBER; normal getMember HTTP response remains unchanged.
 
-- [ ] Add real Spring proxy/MockMvc/H2 tests for cache failures and recovery; observe failures before implementation.
-- [ ] Register the scoped handler and sanitized warnings without changing business methods.
-- [ ] Add allowlist/invalidation/log-privacy tests and DB/absent-member regression assertions.
-- [ ] Run targeted tests then all local tests except the existing Docker-only PostgreSQL test, plus ArchUnit/Spotless/bootJar.
-- [ ] Perform one independent review and fix material findings; commit the bounded code and documentation.
+- [x] Add real Spring proxy/MockMvc/H2 tests for cache failures and recovery; observe failures before implementation.
+- [x] Register the scoped handler and sanitized warnings without changing business methods.
+- [x] Add allowlist/invalidation/log-privacy tests and DB/absent-member regression assertions.
+- [x] Run targeted tests then all local tests except the existing Docker-only PostgreSQL test, plus ArchUnit/Spotless/bootJar.
+- [x] Perform one independent review and fix material findings; commit the bounded code and documentation.
 
 ### Task 2: Publish and verify
 
-- [ ] Push main and inspect full CI including the existing real PostgreSQL transaction test and GHCR build.
-- [ ] Confirm automatic GitOps tag, actual new account-service image/rollout and Argo health.
-- [ ] Read-only browser smoke: anonymous customer auction detail and seller lookup remain usable.
-- [ ] Record actual evidence/limits, sync GitOps and leave checkouts clean.
+- [x] Push main and inspect full CI including the existing real PostgreSQL transaction test and GHCR build.
+- [x] Confirm automatic GitOps tag, actual new account-service image/rollout and Argo health.
+- [x] Read-only browser smoke: anonymous customer auction detail and seller lookup remain usable.
+- [x] Record actual evidence/limits, sync GitOps and leave checkouts clean.

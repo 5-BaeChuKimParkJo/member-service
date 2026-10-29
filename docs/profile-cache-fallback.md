@@ -25,6 +25,16 @@
 - 로컬에서는 Docker를 띄우지 않았다. 기존 `AccountRegistrationTransactionTest`
   1건은 명시적으로 제외하고 전체 Linux CI에서 별도로 실행한다.
 
+새 회귀 테스트만 실행할 때는 JDK 17에서 다음을 사용한다. Redis 서버나 Docker는 필요 없다.
+
+```powershell
+.\gradlew.bat test --tests "*MemberProfileCache*Test"
+```
+
+독립 검토에서 Critical/Important/Minor 지적은 없었다. 검토자는 테스트를 직접 실행하지
+않았으며, 실행 근거와 실제 배포는 작성자가 별도로 확인한다. HTTP 캐시 테스트의 인증
+필터는 격리를 위해 꺼져 있다. 인증 저장소 장애에서 로그인 성공을 보장하는 기능은 아니다.
+
 ## 한계와 별도 범위
 
 Redis 명령이 오류를 반환할 때의 fallback이다. 기존 명령 타임아웃까지의 대기시간과
@@ -35,4 +45,19 @@ outage 때 늘어나는 DB 조회 부하는 남는다. 타임아웃·TTL·재시
 이번 테스트는 정상 캐시일 때와 장애 때의 오류 응답이 같고 가짜 성공이 아님을 확인한다.
 404로 정리하는 전역 예외 매핑 개선은 별도 범위다.
 
-CI와 실제 배포 확인 결과는 완료 후 아래에 기록한다.
+## 실제 CI·운영 확인 · 2026-10-29
+
+구현 커밋은 `9d2f7b76e9355d6154c35364b1b58d53c785901c`다.
+[CI 40832095706](https://github.com/5-BaeChuKimParkJo/member-service/actions/runs/40832095706)
+에서 `./gradlew clean check bootJar`와 GHCR 발행이 모두 성공했다. 로컬의 임시 제외
+설정은 CI에 전달하지 않았으며 기존 Docker/PostgreSQL 트랜잭션 테스트도 전체 실행 대상이다.
+실제 로그의 test task 실행과 `BUILD SUCCESSFUL in 1m 18s`를 확인했다.
+
+자동 GitOps 리비전 `1bfb00d1d3d375cb53c9891fd19101082f0091e8`에서 실제 account-service
+이미지 `9d2f7b7`과 rollout 완료를 확인했다. 새 파드는 준비 1/1, 재시작 0회였고
+Argo는 Synced/Healthy였다. 초기 기동은 첫 55초 대기 제한을 넘겼고, 이벤트와 새 파드
+준비 상태를 재확인한 뒤 완료를 판정했다.
+
+실제 운영 Chromium 데스크톱/모바일에서 익명 판매자 조회 200과 경매 판매자 UUID
+일치, 경매 제목·판매자 표시, 가로 넘침 없음을 확인했다. 입찰/결제 POST는 0건이다.
+운영 Redis를 중단하지 않았으므로 이 화면 확인은 실제 Redis 장애 주입 시험이 아니다.
