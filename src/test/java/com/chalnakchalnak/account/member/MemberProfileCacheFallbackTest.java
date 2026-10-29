@@ -21,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -108,32 +109,45 @@ class MemberProfileCacheFallbackTest {
         .andExpect(jsonPath("$.nickname").value("Database seller"));
   }
 
-  @Test
-  void doesNotTurnAnAbsentMemberIntoAFabricatedProfileDuringACacheOutage() throws Exception {
+  @ParameterizedTest
+  @ValueSource(
+      strings = {
+        "/api/v1/member",
+        "/member-service/api/v1/member",
+        "/account-service/api/v1/member"
+      })
+  void doesNotTurnAnAbsentMemberIntoAFabricatedProfileDuringACacheOutage(String route)
+      throws Exception {
     var baseline =
-        mvc.perform(get("/api/v1/member/{uuid}", "20000000-0000-4000-8000-000000000002"))
+        mvc.perform(get(route + "/{uuid}", "20000000-0000-4000-8000-000000000002"))
             .andReturn()
             .getResponse();
-    assertThat(baseline.getStatus()).isBetween(400, 599);
+    assertThat(baseline.getStatus()).isEqualTo(404);
     cache.failReads = true;
     cache.failWrites = true;
     assertThatThrownBy(() -> memberService.getMember("20000000-0000-4000-8000-000000000002"))
         .isInstanceOf(BaseException.class);
     assertThat(cache.getNativeCache()).isEmpty();
-    mvc.perform(get("/api/v1/member/{uuid}", "20000000-0000-4000-8000-000000000002"))
-        .andExpect(status().is(baseline.getStatus()))
+    mvc.perform(get(route + "/{uuid}", "20000000-0000-4000-8000-000000000002"))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.code").value(2002))
+        .andExpect(jsonPath("$.message").value("존재하지 않는 회원입니다."))
         .andExpect(content().json(baseline.getContentAsString()))
         .andExpect(jsonPath("$.memberUuid").doesNotExist());
   }
 
   @Test
-  void preservesARepositoryFailureInsteadOfHidingItAsACacheFailure() {
+  void preservesARepositoryFailureInsteadOfHidingItAsACacheFailure() throws Exception {
     cache.failReads = true;
     cache.failWrites = true;
     var failure = new DataAccessResourceFailureException("fixture database failure");
     doThrow(failure).when(members).findByMemberUuid(MEMBER_UUID);
     assertThatThrownBy(() -> memberService.getMember(MEMBER_UUID)).isSameAs(failure);
     assertThat(cache.getNativeCache()).isEmpty();
+    mvc.perform(get("/api/v1/member/{uuid}", MEMBER_UUID))
+        .andExpect(status().isInternalServerError())
+        .andExpect(jsonPath("$.code").value(500))
+        .andExpect(jsonPath("$.message").value("서버 내부 오류가 발생했습니다. 관리자에게 문의해주세요."));
   }
 
   @TestConfiguration(proxyBeanMethods = false)

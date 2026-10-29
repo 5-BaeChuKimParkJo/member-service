@@ -40,5 +40,6 @@ GitOps의 이미지 태그 변경과 Argo CD 동기화 후 실제 실행 버전�
 - [체험 순서](https://github.com/5-BaeChuKimParkJo/FE-Service/blob/main/docs/portfolio/demo-guide.md)
 - [운영 SQL 설명](ops/sql/README.md)
 - [프로필 캐시 장애 대응과 검증](docs/profile-cache-fallback.md)
+- [회원 API 오류 응답 분리와 검증](docs/member-error-mapping.md)
 - [비공개 GitOps](https://github.com/chuman0216/cncn_private)
 - [코드·커밋 규칙](CONTRIBUTING.md)

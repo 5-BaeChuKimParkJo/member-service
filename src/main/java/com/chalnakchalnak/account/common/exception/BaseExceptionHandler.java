@@ -4,6 +4,8 @@ import com.chalnakchalnak.account.common.entity.ExceptionResponseEntity;
 import com.chalnakchalnak.account.common.error.AccountErrorCode;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 @Hidden
 @RestControllerAdvice
+@Order(Ordered.LOWEST_PRECEDENCE)
 @Slf4j
 public class BaseExceptionHandler {
 
@@ -29,11 +32,8 @@ public class BaseExceptionHandler {
   @ExceptionHandler(RuntimeException.class)
   protected ResponseEntity<ExceptionResponseEntity<Void>> RuntimeError(RuntimeException e) {
     ExceptionResponseEntity<Void> response =
-        new ExceptionResponseEntity<>(AccountErrorCode.INTERNAL_SERVER_ERROR, e.getMessage());
+        new ExceptionResponseEntity<>(AccountErrorCode.INTERNAL_SERVER_ERROR);
     log.error("RuntimeException: ", e);
-    for (StackTraceElement s : e.getStackTrace()) {
-      System.out.println(s);
-    }
     return new ResponseEntity<>(response, response.httpStatus());
   }
 

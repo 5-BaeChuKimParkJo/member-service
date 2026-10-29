@@ -3,6 +3,8 @@ package com.chalnakchalnak.account.auth.common.exception;
 import com.chalnakchalnak.account.auth.common.response.AuthErrorCode;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -14,7 +16,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 @Hidden
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "com.chalnakchalnak.account.auth.adapter.in.web")
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @Slf4j
 public class AuthBaseExceptionHandler {
 
