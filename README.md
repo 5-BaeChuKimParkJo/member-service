@@ -2,7 +2,7 @@
 
 인증·회원·프로필을 통합한 Spring Boot 서비스다. 소스 저장소 이름은
 `member-service`, Kubernetes·실행·이미지 이름은 `account-service`다.
-기준일: 2026-10-25.
+기준일: 2026-10-29.
 
 ## 역할과 연결
 
@@ -39,5 +39,6 @@ GitOps의 이미지 태그 변경과 Argo CD 동기화 후 실제 실행 버전�
 - [전체 아키텍처](https://github.com/5-BaeChuKimParkJo/FE-Service/blob/main/docs/portfolio/architecture.md)
 - [체험 순서](https://github.com/5-BaeChuKimParkJo/FE-Service/blob/main/docs/portfolio/demo-guide.md)
 - [운영 SQL 설명](ops/sql/README.md)
+- [프로필 캐시 장애 대응과 검증](docs/profile-cache-fallback.md)
 - [비공개 GitOps](https://github.com/chuman0216/cncn_private)
 - [코드·커밋 규칙](CONTRIBUTING.md)
